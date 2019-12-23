@@ -18,8 +18,6 @@
 						"polyfills": "src/polyfills.ts",
 						"assets": [
 							"src/assets",
-							"src/sw.js",
-							"src/manifest.json",
 							"src/favicon.ico"
 						],
 						"styles": ["src/styles.scss"],
@@ -73,8 +71,6 @@
 						"styles": ["src/styles.scss"],
 						"assets": [
 							"src/assets",
-							"src/sw.js",
-							"src/manifest.json",
 							"src/favicon.ico"
 						]
 					}
