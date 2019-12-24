@@ -1,1 +1,10 @@
 @import "../assets/scss/scss-utils.scss";
+
+.bx--push-content {
+	margin-left: 16rem !important;
+}
+
+.bx--content {
+	margin-left: 3rem;
+	transition: margin-left .11s;
+}

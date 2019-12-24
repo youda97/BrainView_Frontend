@@ -6,10 +6,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // carbon-components-angular default imports
-import { UIShellModule } from 'carbon-components-angular';
+import { UIShellModule, DialogModule, PlaceholderModule } from 'carbon-components-angular';
 import { Notification20Module } from '@carbon/icons-angular/lib/notification/20';
 import { UserAvatar20Module } from '@carbon/icons-angular/lib/user--avatar/20';
 import { AppSwitcher20Module } from '@carbon/icons-angular/lib/app-switcher/20';
+import { Cognitive20Module } from '@carbon/icons-angular/lib/cognitive/20';
+import { RecentlyViewed20Module } from '@carbon/icons-angular/lib/recently-viewed/20';
+
 import { HeaderComponent } from './header/header.component';
 
 @NgModule({
@@ -24,8 +27,12 @@ import { HeaderComponent } from './header/header.component';
 		AppRoutingModule,
 		UIShellModule,
 		Notification20Module,
+		DialogModule,
+		PlaceholderModule,
 		UserAvatar20Module,
-		AppSwitcher20Module
+		AppSwitcher20Module,
+		Cognitive20Module,
+		RecentlyViewed20Module
 	],
 	bootstrap: [AppComponent]
 })
