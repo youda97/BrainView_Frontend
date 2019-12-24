@@ -1,0 +1,62 @@
+.bx--login {
+	height: 650px;
+	width: 390px;
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 77px 55px 33px 55px;
+
+	.bx--title,
+	.bx--brain-icon {
+		display: block;
+		font-size: 30px;
+		color: #333333;
+		line-height: 1.2;
+		text-align: center;
+	}
+	.bx--title {
+		padding-bottom: 26px;
+	}
+
+	.bx--brain-icon {
+		padding-bottom: 48px;
+	}
+
+	.bx--input {
+		margin-bottom: 37px;
+	}
+
+	.bx--btn {
+		padding: 0 calc(0.875rem - 3px) 12px;
+	}
+
+	.bx--button {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		padding-top: 13px;
+		width: 100%;
+	}
+
+	.bx--footer {
+		text-align: center;
+		padding-top: 90px;
+
+		.bx--text1,
+		.bx--text2 {
+			font-size: 13px;
+			line-height: 1.5;
+		}
+
+		.bx--text1 {
+			color: #666666;
+		}
+
+		.bx--text2 {
+			color: #333333;
+		}
+	}
+}
