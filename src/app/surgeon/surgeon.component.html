@@ -1,0 +1,85 @@
+<ibm-table-container>
+	<ibm-table-header>
+		<div style="display: flex;">
+			<svg
+				ibmIconArrowLeft20
+				*ngIf="title === 'New Surgeon'"
+				class="bx--back-arrow"
+				(click)="back()"></svg>
+			<h4 ibmTableHeaderTitle>{{title}}</h4>
+		</div>
+	</ibm-table-header>
+	<ibm-table-toolbar>
+		<ibm-table-toolbar-content>
+			<ibm-table-toolbar-search
+				#search
+				*ngIf="title === 'Surgeons' || isEditing"
+				[expandable]="true"
+				(clear)="clear()"
+				(valueChange)="filterItem(search.value)">
+			</ibm-table-toolbar-search>
+			<button *ngIf="title === 'Surgeons' || isEditing" ibmButton="primary" size="sm" (click)="addNewSurgeon()" [disabled]="isEditing">
+				Add new surgeon
+				<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
+			</button>
+			<button *ngIf="title === 'New Surgeon'" ibmButton="primary" size="sm" (click)="add()">
+				Add
+				<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
+			</button>
+		</ibm-table-toolbar-content>
+	</ibm-table-toolbar>
+
+	<ibm-table
+		*ngIf="title === 'Surgeons' || isEditing"
+		[model]="model"
+		[size]="md"
+		[showSelectionColumn]="false"
+		[enableSingleSelect]="false"
+		[striped]="false"
+		(sort)="simpleSort($event)">
+	</ibm-table>
+	<ibm-pagination
+		*ngIf="title === 'Surgeons' || isEditing"
+		[model]="model"
+		(selectPage)="selectPage($event)">
+	</ibm-pagination>
+
+	<ibm-table
+		*ngIf="title === 'New Surgeon'"
+		[model]="fakeModel"
+		[size]="md"
+		[showSelectionColumn]="false">
+	</ibm-table>
+	<form *ngIf="title === 'New Surgeon'" class="bx--form">
+		<ibm-label class="bx--input">Name<input name="name" ibmText placeholder="Name"></ibm-label>
+		<ibm-label class="bx--input">Email<input ibmText name="email" placeholder="Email"></ibm-label>
+		<ibm-label class="bx--input">Password<input ibmText name="password" placeholder="Password"></ibm-label>
+	</form>
+</ibm-table-container>
+
+<ng-template #deleteTemplate let-data="data">
+	<svg ibmIconDelete20 class="bx--delete" (click)="openModal($event)"></svg>
+</ng-template>
+
+<ng-template #dropdownTemplate let-data="data">
+	<ibm-combo-box
+		style="width: 200px;"
+		[items]="data.patients"
+		type="multi"
+		(close)="close(data)"
+		(selected)="selected($event, data)">
+		<ibm-dropdown-list></ibm-dropdown-list>
+	</ibm-combo-box>
+</ng-template>
+
+<ng-template #expandedTemplate let-data="data">
+		<form class="bx--form">
+			<ibm-label class="bx--input">Name<input ibmText [value]="data.name"></ibm-label>
+			<ibm-label class="bx--input">Email<input ibmText [value]="data.email"></ibm-label>
+			<ibm-label class="bx--input">Password<input ibmText [value]="data.password"></ibm-label>
+			<button ibmButton="primary" size="sm" (click)="save(data, $event)">
+				Save
+				<ibm-icon-save20 class="bx--btn__icon bx--save"></ibm-icon-save20>
+			</button>
+		</form>
+</ng-template>

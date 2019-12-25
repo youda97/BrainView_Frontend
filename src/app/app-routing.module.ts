@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { SurgeonComponent } from './surgeon/surgeon.component';
 
 const routes: Routes = [
 	{
@@ -10,6 +11,10 @@ const routes: Routes = [
 	// 	path: '',
 	// 	loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
 	// }
+	{
+		path: 'surgeons',
+		component: SurgeonComponent
+	}
 ];
 
 @NgModule({
