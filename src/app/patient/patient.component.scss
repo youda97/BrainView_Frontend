@@ -1,0 +1,35 @@
+.bx--delete {
+	cursor: pointer;
+	fill: rgb(218, 30, 40);
+}
+
+.bx--back-arrow {
+	cursor: pointer;
+	margin: auto 0;
+	margin-right: 5px;
+}
+
+.bx--pagination {
+	border-top: none;
+}
+
+.bx--data-table--sort th:first-of-type:not(.bx--table-column-checkbox):not(.bx--table-expand) {
+    padding-left: 1rem;
+}
+
+.bx--form {
+	background-color: white;
+	padding: 24px;
+
+	.bx--input {
+		margin-bottom: 1.6em;
+	}
+}
+
+.bx--save {
+	top: 4px;
+}
+
+td.undefined {
+	vertical-align: middle;
+}

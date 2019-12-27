@@ -30,12 +30,14 @@ import { Save20Module } from '@carbon/icons-angular/lib/save/20';
 
 import { HeaderComponent } from './header/header.component';
 import { SurgeonComponent } from './surgeon/surgeon.component';
+import { PatientComponent } from './patient/patient.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		HeaderComponent,
-		SurgeonComponent
+		SurgeonComponent,
+		PatientComponent
 	],
 	imports: [
 		BrowserModule,
