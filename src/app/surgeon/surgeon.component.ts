@@ -10,7 +10,14 @@ import {
 	HostListener,
 	ElementRef
 } from '@angular/core';
-import { TableModel, TableHeaderItem, TableItem, AlertModalType, ModalButton, ModalService } from 'carbon-components-angular';
+
+import {
+	TableModel,
+	TableHeaderItem,
+	TableItem,
+	ModalButton,
+	ModalService
+} from 'carbon-components-angular';
 
 function sort(model, index: number) {
 	if (model.header[index].sorted) {
@@ -30,12 +37,14 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	model = new TableModel();
 	fakeModel = new TableModel();
 
+	newPatients = [];
+	selectedList = [];
 	patients = [];
 	data = [];
 	filteredItems = [];
 	sortable = true;
 	title = 'Surgeons';
-	totalDataLength = 150;
+	totalDataLength = 50;
 	isEditing = false;
 
 	selectedEmail = '';
@@ -95,11 +104,12 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		}
 
 		for (let i = 0; i < 50; i++) {
+			const newPatients = this.patients.map(a => Object.assign({}, a));
 			this.data.push({
 				name: 'name ' + i,
 				email: 'email' + i + '@uwo.ca',
 				password: 'pass',
-				patients: this.patients
+				patients: newPatients
 			});
 		}
 
@@ -187,7 +197,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		const item = {
 			name: this.elementRef.nativeElement.querySelector('[name=\'name\']').value,
 			email: this.elementRef.nativeElement.querySelector('[name=\'email\']').value,
-			password: this.elementRef.nativeElement.querySelector('[name=\'password\']').value
+			password: this.elementRef.nativeElement.querySelector('[name=\'password\']').value,
+			patients: this.newPatients
 		};
 
 		this.data.push(item);
@@ -246,32 +257,60 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		this.selectPage(1);
 	}
 
-	selected(event, data) {
-		data.patients.forEach(patient => {
-			if (event.some(item => item.content === patient.content)) {
+	getUnique(array) {
+		const result = array.reduce((unique, o) => {
+			if (!unique.some(obj => obj.content === o.content)) {
+				unique.push(o);
+			}
+			return unique;
+		}, []);
+		return result;
+	}
+
+	// TODO: Remove selected patients from other dropdowns
+	// and add them back when they unselected
+	onSelected(event, data) {
+		event.forEach(patientElem => {
+			this.selectedList.push(patientElem);
+		});
+
+		const filtered = this.getUnique(this.selectedList).filter(value => {
+			return event.some(a => a.content === value.content);
+		});
+		this.selectedList = filtered.map(a => Object.assign({}, a));
+
+		if (this.selectedList.length === 0) {
+			return;
+		}
+		data.forEach(patient => {
+			if (this.selectedList.some(item => item.content === patient.content)) {
 				patient.selected = true;
-				this.data.forEach(element => {
-					if (element.name !== data.name) {
-						const filtered = element.patients.filter(value => {
-							return value.content !== patient.content;
-						});
-						element.patients = filtered;
-					}
-				});
+			} else {
+				patient.selected = false;
 			}
 		});
 	}
 
-	close(data) {
-		const index = this.data.findIndex(x => x.email === data.email);
-		const page = Math.floor(index / this.model.pageLength) + 1;
-		this.selectPage(page);
+	selected(event, data) {
+		this.onSelected(event, data.patients);
+	}
+
+	newSurgeonSelected(event) {
+		this.newPatients = this.patients.map(a => Object.assign({}, a));
+		this.onSelected(event, this.newPatients);
 	}
 
 	@HostListener('click',  ['$event'])
 	onClick(event) {
 		const expandedButtons = Array.from<HTMLElement>(this.elementRef.nativeElement.querySelectorAll('.bx--table-expand__button'));
 		const expandedRow = this.elementRef.nativeElement.querySelector('.bx--expandable-row');
+		const dropdowns = Array.from<HTMLElement>(this.elementRef.nativeElement.querySelectorAll('.bx--list-box__field'));
+		const checkboxes = Array.from<HTMLElement>(this.elementRef.nativeElement.querySelectorAll('.bx--checkbox-label'));
+
+		if (dropdowns.some(dropdown => dropdown.contains(event.target)) &&
+			checkboxes.every(checkbox => checkbox.getAttribute('data-contained-checkbox-state') === 'false')) {
+			this.selectedList = [];
+		}
 
 		if (expandedButtons.length > 0 && expandedButtons.some(button => button.contains(event.target))) {
 			if (expandedRow) {

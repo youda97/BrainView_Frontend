@@ -54,6 +54,18 @@
 		<ibm-label class="bx--input">Name<input name="name" ibmText placeholder="Name"></ibm-label>
 		<ibm-label class="bx--input">Email<input ibmText name="email" placeholder="Email"></ibm-label>
 		<ibm-label class="bx--input">Password<input ibmText name="password" placeholder="Password"></ibm-label>
+		<ibm-label class="bx--input bx--form-item">
+			<label class="bx--label">Patients</label>
+			<div class="bx--text-input__field-wrapper">
+				<ibm-combo-box
+					style="width: 100%;"
+					[items]="patients"
+					type="multi"
+					(selected)="newSurgeonSelected($event)">
+					<ibm-dropdown-list></ibm-dropdown-list>
+				</ibm-combo-box>
+			</div>
+		</ibm-label>
 	</form>
 </ibm-table-container>
 
@@ -66,7 +78,6 @@
 		style="width: 200px;"
 		[items]="data.patients"
 		type="multi"
-		(close)="close(data)"
 		(selected)="selected($event, data)">
 		<ibm-dropdown-list></ibm-dropdown-list>
 	</ibm-combo-box>
