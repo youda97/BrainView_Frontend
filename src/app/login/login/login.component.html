@@ -1,5 +1,5 @@
 <ibm-tile class="bx--login">
-	<form style="width: 100%;">
+	<form style="width: 100%;" [formGroup]="angForm" novalidate>
 		<span class="bx--title">
 			Welcome
 		</span>
@@ -7,10 +7,16 @@
 			<img src="../../../favicon.ico" height="60" width="60">
 		</span>
 
-		<ibm-label class="bx--input">Email<input ibmText></ibm-label>
-		<ibm-label class="bx--input">Password<input ibmText></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid email is required'>Email<input formControlName="email" ibmText></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='A valid password is required'>Password<input formControlName="password" ibmText></ibm-label>
 
-		<button ibmButton="primary" class="bx--button">LOGIN</button>
+		<button
+			type="submit"
+			[disabled]="angForm.pristine || angForm.invalid"
+			ibmButton="primary"
+			class="bx--button">
+			LOGIN
+		</button>
 
 		<div class="bx--footer">
 			<span class="bx--text1">

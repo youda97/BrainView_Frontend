@@ -18,6 +18,9 @@ import {
 	ModalButton,
 	ModalService
 } from 'carbon-components-angular';
+import { FormGroup, FormBuilder,  Validators } from '@angular/forms';
+// import custom validator to validate that password and confirm password fields match
+import { MustMatch } from '../_helpers/must-match.validator';
 
 function sort(model, index: number) {
 	if (model.header[index].sorted) {
@@ -47,6 +50,14 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	totalDataLength = 50;
 	isEditing = false;
 
+	disabledAdd = true;
+	dropdownTouched = false;
+	angForm: FormGroup;
+
+	nameText = '';
+	emailText = '';
+	passwordText = '';
+
 	selectedEmail = '';
 	modalType = 'danger';
 	modalContent = 'Are you sure you want to remove this surgeon?';
@@ -63,10 +74,62 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	protected deleteTemplate: TemplateRef<any>;
 	@ViewChild('dropdownTemplate', null)
 	protected dropdownTemplate: TemplateRef<any>;
+	@ViewChild('passwordTemplate', null)
+	protected passwordTemplate: TemplateRef<any>;
 	@ViewChild('expandedTemplate', null)
 	protected expandedTemplate: TemplateRef<any>;
 
-	constructor(protected elementRef: ElementRef, protected modalService: ModalService) { }
+	constructor(protected elementRef: ElementRef,
+		protected modalService: ModalService,
+		protected fb: FormBuilder) {
+		this.createForm();
+	}
+
+	get invalidName() {
+		if (this.angForm.controls['name'].invalid &&
+			(this.angForm.controls['name'].dirty || this.angForm.controls['name'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidEmail() {
+		if (this.angForm.controls['email'].invalid &&
+			(this.angForm.controls['email'].dirty || this.angForm.controls['email'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidPassword() {
+		if (this.angForm.controls['password'].invalid &&
+			(this.angForm.controls['password'].dirty || this.angForm.controls['password'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidConfirmPasswordAdd() {
+		if (this.angForm.controls['confirmPassword'].invalid &&
+			(this.angForm.controls['confirmPassword'].dirty || this.angForm.controls['confirmPassword'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidConfirmPasswordEdit() {
+		if (this.angForm.controls['confirmPassword'].invalid) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidPatient() {
+		if (this.dropdownTouched && !this.newPatients.some(patient => patient.selected)) {
+			return true;
+		}
+		return false;
+	}
 
 	ngOnInit() {
 		this.fakeModel.header = [
@@ -108,7 +171,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 			this.data.push({
 				name: 'name ' + i,
 				email: 'email' + i + '@uwo.ca',
-				password: 'pass',
+				password: 'passpass',
 				patients: newPatients
 			});
 		}
@@ -117,6 +180,17 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		this.model.totalDataLength = this.data.length;
 		this.customSort(this.data);
 		this.selectPage(1);
+	}
+
+	createForm() {
+		this.angForm = this.fb.group({
+			name: ['', Validators.required ],
+			email: ['', [Validators.required, Validators.email]],
+			password: ['', [Validators.required, Validators.minLength(6)]],
+			confirmPassword: ['', Validators.required]
+		}, {
+			validator: MustMatch('password', 'confirmPassword')
+		});
 	}
 
 	selectPage(page) {
@@ -141,7 +215,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 					expandedTemplate: this.expandedTemplate
 				}),
 				new TableItem({ data: datum.email }),
-				new TableItem({ data: datum.password }),
+				new TableItem({ data: datum.password, template: this.passwordTemplate}),
 				new TableItem({data: datum, template: this.dropdownTemplate}),
 				new TableItem({template: this.deleteTemplate})
 			]);
@@ -151,10 +225,14 @@ export class SurgeonComponent implements OnInit, OnChanges {
 
 	addNewSurgeon() {
 		this.title = 'New Surgeon';
+		this.disabledAdd = true;
+		this.angForm.reset();
 	}
 
 	back() {
 		this.title = 'Surgeons';
+		this.disabledAdd = true;
+		this.angForm.reset();
 	}
 
 	save(data, event) {
@@ -171,6 +249,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 				this.isEditing = false;
 			}
 		});
+		this.angForm.reset();
 	}
 
 	openModal(event) {
@@ -298,6 +377,37 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	newSurgeonSelected(event) {
 		this.newPatients = this.patients.map(a => Object.assign({}, a));
 		this.onSelected(event, this.newPatients);
+
+		setTimeout(() => {
+			this.disabledAdd = !(this.newPatients.some(patient => patient.selected) && !(this.angForm.pristine || this.angForm.invalid));
+		});
+	}
+
+	assignDefaults(data) {
+		this.nameText = data.name;
+		this.emailText = data.email;
+		this.passwordText = data.password;
+	}
+
+	@HostListener('focusout',  ['$event'])
+	onFocousout(event) {
+		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+
+		if (this.title === 'New Surgeon' && dropdown.contains(event.target)) {
+			this.dropdownTouched = true;
+		}
+	}
+
+	@HostListener('keyup',  ['$event'])
+	onKeyup(event) {
+		const textFields = Array.from<HTMLElement>(
+			this.elementRef.nativeElement.querySelectorAll('.bx--text-input__field-wrapper:not(.combobox)'));
+		if (textFields.some(field => field.contains(event.target))) {
+			this.disabledAdd =
+				!(textFields.every(field => field.querySelector('input').value !== '') &&
+				this.newPatients.some(patient => patient.selected) &&
+				!(this.angForm.pristine || this.angForm.invalid));
+		}
 	}
 
 	@HostListener('click',  ['$event'])
@@ -316,6 +426,19 @@ export class SurgeonComponent implements OnInit, OnChanges {
 			if (expandedRow) {
 				this.title = expandedRow.children[1].innerText;
 				this.isEditing = true;
+
+				this.angForm.reset();
+				this.angForm.controls['name'].setValue(this.nameText);
+				this.angForm.controls['name'].updateValueAndValidity();
+
+				this.angForm.controls['email'].setValue(this.emailText);
+				this.angForm.controls['email'].updateValueAndValidity();
+
+				this.angForm.controls['password'].setValue(this.passwordText);
+				this.angForm.controls['password'].updateValueAndValidity();
+
+				this.angForm.controls['confirmPassword'].setValue(this.passwordText);
+				this.angForm.controls['confirmPassword'].updateValueAndValidity();
 			} else {
 				this.title = 'Surgeons';
 				this.isEditing = false;

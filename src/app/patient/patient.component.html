@@ -22,7 +22,12 @@
 					Add new patient
 					<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
 				</button>
-				<button *ngIf="title === 'New Patient'" ibmButton="primary" size="sm" (click)="add()">
+				<button
+					*ngIf="title === 'New Patient'"
+					ibmButton="primary"
+					size="sm"
+					[disabled]="disabledAdd"
+					(click)="add()">
 					Add
 					<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
 				</button>
@@ -50,13 +55,16 @@
 			[size]="md"
 			[showSelectionColumn]="false">
 		</ibm-table>
-		<form *ngIf="title === 'New Patient'" class="bx--form">
-			<ibm-label class="bx--input">Name<input name="name" ibmText placeholder="Name"></ibm-label>
-			<ibm-label class="bx--input">Email<input ibmText name="email" placeholder="Email"></ibm-label>
+		<form *ngIf="title === 'New Patient'" class="bx--form" [formGroup]="angForm" novalidate>
+			<ibm-label class="bx--input" [invalid]="invalidName" invalidText='A valid value is required'>Name<input name="name" ibmText placeholder="Name" formControlName="name"></ibm-label>
+			<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid value is required'>Email<input ibmText name="email" placeholder="Email" formControlName="email"></ibm-label>
 			<ibm-label class="bx--input bx--form-item">
 				<label class="bx--label">Surgeon</label>
 				<div class="bx--text-input__field-wrapper">
 					<ibm-combo-box
+						placeholder="select surgeon"
+						[invalid]="invalidSurgeon"
+						invalidText='A valid value is required'
 						style="width: 100%;"
 						[items]="surgeons"
 						(selected)="newPatientSelected($event)">
@@ -64,7 +72,6 @@
 					</ibm-combo-box>
 				</div>
 			</ibm-label>
-
 		</form>
 	</ibm-table-container>
 
@@ -74,6 +81,7 @@
 
 	<ng-template #dropdownTemplate let-data="data">
 		<ibm-combo-box
+			placeholder="select surgeon"
 			style="width: 200px;"
 			[items]="data.surgeons"
 			(selected)="selected($event, data)">
@@ -82,12 +90,13 @@
 	</ng-template>
 
 	<ng-template #expandedTemplate let-data="data">
-			<form class="bx--form">
-				<ibm-label class="bx--input">Name<input ibmText [value]="data.name"></ibm-label>
-				<ibm-label class="bx--input">Email<input ibmText [value]="data.email"></ibm-label>
-				<button ibmButton="primary" size="sm" (click)="save(data, $event)">
-					Save
-					<ibm-icon-save20 class="bx--btn__icon bx--save"></ibm-icon-save20>
-				</button>
-			</form>
+		{{ assignDefaults(data) }}
+		<form class="bx--form" [formGroup]="angForm" novalidate>
+			<ibm-label class="bx--input" [invalid]="invalidName" invalidText='A valid value is required'>Name<input ibmText name="name" placeholder="Name" formControlName="name"></ibm-label>
+			<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid value is required'>Email<input ibmText name="email" placeholder="Email" formControlName="email"></ibm-label>
+			<button [disabled]="angForm.invalid" ibmButton="primary" size="sm" (click)="save(data, $event)">
+				Save
+				<ibm-icon-save20 class="bx--btn__icon bx--save"></ibm-icon-save20>
+			</button>
+		</form>
 	</ng-template>

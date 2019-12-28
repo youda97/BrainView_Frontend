@@ -1,7 +1,6 @@
 import {
 	Component,
 	OnInit,
-	Input,
 	OnChanges,
 	SimpleChanges,
 	ViewChild,
@@ -18,6 +17,7 @@ import {
 	ModalButton,
 	ModalService
 } from 'carbon-components-angular';
+import { FormGroup, FormBuilder,  Validators } from '@angular/forms';
 
 function sort(model, index: number) {
 	if (model.header[index].sorted) {
@@ -58,6 +58,13 @@ export class PatientComponent implements OnInit, OnChanges {
 			click: () => this.delete()
 	}] as Array<ModalButton>;
 
+	disabledAdd = true;
+	dropdownTouched = false;
+	angForm: FormGroup;
+
+	nameText = '';
+	emailText = '';
+
 	@ViewChild('deleteTemplate', null)
 	protected deleteTemplate: TemplateRef<any>;
 	@ViewChild('dropdownTemplate', null)
@@ -65,7 +72,34 @@ export class PatientComponent implements OnInit, OnChanges {
 	@ViewChild('expandedTemplate', null)
 	protected expandedTemplate: TemplateRef<any>;
 
-	constructor(protected elementRef: ElementRef, protected modalService: ModalService) { }
+	constructor(protected elementRef: ElementRef,
+		protected modalService: ModalService,
+		protected fb: FormBuilder) {
+		this.createForm();
+	}
+
+	get invalidName() {
+		if (this.angForm.controls['name'].invalid &&
+			(this.angForm.controls['name'].dirty || this.angForm.controls['name'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidEmail() {
+		if (this.angForm.controls['email'].invalid &&
+			(this.angForm.controls['email'].dirty || this.angForm.controls['email'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidSurgeon() {
+		if (this.dropdownTouched && !this.newSurgeons.some(surgeon => surgeon.selected)) {
+			return true;
+		}
+		return false;
+	}
 
 	ngOnInit() {
 		this.fakeModel.header = [
@@ -115,6 +149,13 @@ export class PatientComponent implements OnInit, OnChanges {
 		this.selectPage(1);
 	}
 
+	createForm() {
+		this.angForm = this.fb.group({
+			name: ['', Validators.required],
+			email: ['', [Validators.required, Validators.email]]
+		});
+	}
+
 	selectPage(page) {
 		const searchInput = this.elementRef.nativeElement.querySelector('.bx--search-input');
 
@@ -146,25 +187,31 @@ export class PatientComponent implements OnInit, OnChanges {
 
 	addNewPatient() {
 		this.title = 'New Patient';
+		this.disabledAdd = true;
+		this.angForm.reset();
 	}
 
 	back() {
 		this.title = 'Patients';
+		this.disabledAdd = true;
+		this.dropdownTouched = false;
+		this.angForm.reset();
 	}
 
 	save(data, event) {
-		this.data.forEach(element => {
-			if (element.email === data.email) {
-				element.name = event.target.closest('form').children[0].querySelector('input').value;
-				element.email = event.target.closest('form').children[1].querySelector('input').value;
+		this.data.forEach(item => {
+			if (item.email === data.email) {
+				item.name = event.target.closest('form').children[0].querySelector('input').value;
+				item.email = event.target.closest('form').children[1].querySelector('input').value;
 
-				const index = this.data.findIndex(x => x.email === element.email);
+				const index = this.data.findIndex(x => x.email === item.email);
 				const page = Math.floor(index / this.model.pageLength) + 1;
 				this.selectPage(page);
 				this.title = 'Patients';
 				this.isEditing = false;
 			}
 		});
+		this.angForm.reset();
 	}
 
 	openModal(event) {
@@ -267,6 +314,35 @@ export class PatientComponent implements OnInit, OnChanges {
 	newPatientSelected(event) {
 		this.newSurgeons = this.surgeons.map(a => Object.assign({}, a));
 		this.onSelect(event, this.newSurgeons);
+
+		setTimeout(() => {
+			const textFields = Array.from<HTMLElement>(this.elementRef.nativeElement.querySelectorAll('.bx--text-input__field-wrapper'));
+			const temp = textFields.every(field => field.querySelector('input').value !== '') && !(this.angForm.pristine || this.angForm.invalid);
+			this.disabledAdd = !temp;
+		});
+	}
+
+	assignDefaults(data) {
+		this.nameText = data.name;
+		this.emailText = data.email;
+	}
+
+	@HostListener('focusout',  ['$event'])
+	onFocousout(event) {
+		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+
+		if (this.title === 'New Surgeon' && dropdown.contains(event.target)) {
+			this.dropdownTouched = true;
+		}
+	}
+
+	@HostListener('keyup',  ['$event'])
+	onKeyup(event) {
+		const textFields = Array.from<HTMLElement>(this.elementRef.nativeElement.querySelectorAll('.bx--text-input__field-wrapper'));
+		if (textFields.some(field => field.contains(event.target))) {
+			const temp = textFields.every(field => field.querySelector('input').value !== '') && !(this.angForm.pristine || this.angForm.invalid);
+			this.disabledAdd = !temp;
+		}
 	}
 
 	@HostListener('click',  ['$event'])
@@ -278,6 +354,13 @@ export class PatientComponent implements OnInit, OnChanges {
 			if (expandedRow) {
 				this.title = expandedRow.children[1].innerText;
 				this.isEditing = true;
+
+				this.angForm.reset();
+				this.angForm.controls['name'].setValue(this.nameText);
+				this.angForm.controls['name'].updateValueAndValidity();
+
+				this.angForm.controls['email'].setValue(this.emailText);
+				this.angForm.controls['email'].updateValueAndValidity();
 			} else {
 				this.title = 'Patients';
 				this.isEditing = false;
