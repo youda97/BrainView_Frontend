@@ -79,4 +79,31 @@ ibm-placeholder {
 	.bx--tooltip.bx--tooltip--shown {
 		top: 50px !important;
 	}
+
+	.bx--tooltip {
+		min-width: 8rem;
+		max-width: 10rem;
+		padding: 1rem 0;
+
+		li {
+			width: 100%;
+		}
+	}
+	.bx--form {
+		padding: 24px;
+
+		.bx--input {
+			margin-bottom: 1.6em;
+		}
+	}
+
+	.bx--modal-content {
+		margin-bottom: 0;
+	}
+
+	@media (min-width: 42rem) {
+		.bx--modal-container .bx--modal-header, .bx--modal-container .bx--modal-content, .bx--modal-container .bx--modal-content__regular-content {
+			padding-right: 2%;
+		}
+	}
 }

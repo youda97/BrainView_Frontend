@@ -7,13 +7,16 @@ import {
 	OnInit
 } from '@angular/core';
 
+import { ModalService } from 'carbon-components-angular';
+import { ModalComponent } from './modal.component';
+
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
 	styleUrls: ['./header.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
 	// adds padding to the top of the document, so the content is below the header
 	@HostBinding('class.bx--header') headerClass = true;
 
@@ -21,7 +24,7 @@ export class HeaderComponent implements OnInit{
 	active = true;
 	isLarge = true;
 
-	constructor(protected elementRef: ElementRef) {}
+	constructor(protected modalService: ModalService, protected elementRef: ElementRef) {}
 
 	ngOnInit() {
 		this.isLarge = window.innerWidth < 1056 ? false : true;
@@ -35,6 +38,12 @@ export class HeaderComponent implements OnInit{
 			this.elementRef.nativeElement.nextElementSibling.classList.remove('bx--push-content');
 			this.elementRef.nativeElement.querySelector('ibm-sidenav').classList.add('bx--side-nav--rail');
 		}
+	}
+
+	openModal() {
+		this.modalService.create({
+			component: ModalComponent
+		});
 	}
 
 	@HostListener('window:resize', ['$event'])

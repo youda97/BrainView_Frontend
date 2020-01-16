@@ -27,17 +27,21 @@ import { Add20Module } from '@carbon/icons-angular/lib/add/20';
 import { Delete20Module } from '@carbon/icons-angular/lib/delete/20';
 import { ArrowLeft20Module } from '@carbon/icons-angular/lib/arrow--left/20';
 import { Save20Module } from '@carbon/icons-angular/lib/save/20';
+import { Password20Module } from '@carbon/icons-angular/lib/password/20';
+import { Logout20Module } from '@carbon/icons-angular/lib/logout/20';
 
 import { HeaderComponent } from './header/header.component';
 import { SurgeonComponent } from './surgeon/surgeon.component';
 import { PatientComponent } from './patient/patient.component';
+import { ModalComponent } from './header/modal.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		HeaderComponent,
 		SurgeonComponent,
-		PatientComponent
+		PatientComponent,
+		ModalComponent
 	],
 	imports: [
 		BrowserModule,
@@ -63,8 +67,11 @@ import { PatientComponent } from './patient/patient.component';
 		Add20Module,
 		Delete20Module,
 		ArrowLeft20Module,
-		Save20Module
+		Save20Module,
+		Password20Module,
+		Logout20Module
 	],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
+	entryComponents: [ModalComponent]
 })
 export class AppModule { }

@@ -18,12 +18,10 @@
 				</div>
 			</span>
 
-
 			<div class="bx--user-info">
 				<div class="bx--user-heading">Yousef Ouda</div>
 				<div class="bx--user-subheading">Admin</div>
 			</div>
-
 		</ibm-header-action>
 		<ibm-header-action #SecondAction title="action">
 			<svg ibmIconRecentlyViewed20></svg>
@@ -131,12 +129,10 @@
 </ibm-panel>
 
 <ng-template #template let-tooltip="tooltip">
-	<p>This is some tooltip text. This box shows the maximum amount of text that should appear inside.
-		If more room is needed please use a modal instead.</p>
-	<div class="bx--tooltip__footer">
-		<a class="bx--link">Learn More</a>
-		<button class="bx--btn bx--btn--primary" (click)="tooltip.doClose()">Close</button>
-	</div>
+	<ul>
+		<li ibmButton="secondary" (click)="openModal()">Change password <svg class="bx--btn__icon" ibmIconPassword20></svg></li>
+		<li ibmButton="secondary">Logout <svg class="bx--btn__icon" ibmIconLogout20></svg></li>
+	</ul>
 </ng-template>
 
 <ibm-placeholder></ibm-placeholder>
