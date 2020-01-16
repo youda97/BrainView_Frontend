@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"carbon-angular-starter": {
+		"brain-view": {
 			"root": "",
 			"sourceRoot": "src",
 			"projectType": "application",
@@ -46,18 +46,18 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"options": {
-						"browserTarget": "carbon-angular-starter:build"
+						"browserTarget": "brain-view:build"
 					},
 					"configurations": {
 						"production": {
-							"browserTarget": "carbon-angular-starter:build:production"
+							"browserTarget": "brain-view:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "carbon-angular-starter:build"
+						"browserTarget": "brain-view:build"
 					}
 				},
 				"test": {
@@ -87,7 +87,7 @@
 				}
 			}
 		},
-		"carbon-angular-starter-e2e": {
+		"brain-view-e2e": {
 			"root": "e2e",
 			"sourceRoot": "e2e",
 			"projectType": "application",
@@ -96,7 +96,7 @@
 					"builder": "@angular-devkit/build-angular:protractor",
 					"options": {
 						"protractorConfig": "./protractor.conf.js",
-						"devServerTarget": "carbon-angular-starter:serve"
+						"devServerTarget": "brain-view:serve"
 					}
 				},
 				"lint": {
@@ -109,7 +109,7 @@
 			}
 		}
 	},
-	"defaultProject": "carbon-angular-starter",
+	"defaultProject": "brain-view",
 	"schematics": {
 		"@schematics/angular:component": {
 			"prefix": "app",

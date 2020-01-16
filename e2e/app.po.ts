@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class CarbonAngularStarterPage {
+export class BrainViewPage {
 	navigateTo() {
 		return browser.get('/');
 	}

@@ -1,10 +1,10 @@
-import { CarbonAngularStarterPage } from './app.po';
+import { BrainViewPage } from './app.po';
 
-describe('carbon-angular-starter App', () => {
-	let page: CarbonAngularStarterPage;
+describe('brain-view App', () => {
+	let page: BrainViewPage;
 
 	beforeEach(() => {
-		page = new CarbonAngularStarterPage();
+		page = new BrainViewPage();
 	});
 
 	it('should display message saying app works', () => {
