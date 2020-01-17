@@ -8,13 +8,14 @@
 		</span>
 
 		<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid email is required'>Email<input formControlName="email" ibmText></ibm-label>
-		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='A valid password is required'>Password<input formControlName="password" ibmText></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input formControlName="password" ibmText></ibm-label>
 
 		<button
 			type="submit"
 			[disabled]="angForm.pristine || angForm.invalid"
 			ibmButton="primary"
-			class="bx--button">
+			class="bx--button"
+			(click)="onSubmit()">
 			LOGIN
 		</button>
 

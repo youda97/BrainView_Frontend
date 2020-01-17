@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../_services/auth.service';
+import { TokenStorageService } from '../../_services/token-storage.service';
 
 @Component({
 	selector: 'app-login',
@@ -7,10 +9,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
 	angForm: FormGroup;
+	// isLoggedIn = false;
+	roles: string[] = [];
 
-	constructor(private fb: FormBuilder) {
+	constructor(
+		private authService: AuthService,
+		private tokenStorage: TokenStorageService,
+		private fb: FormBuilder) {
 		this.createForm();
 	}
 
@@ -30,6 +36,13 @@ export class LoginComponent implements OnInit {
 		return false;
 	}
 
+	ngOnInit() {
+		if (this.tokenStorage.getToken()) {
+		  // this.isLoggedIn = true;
+		  this.roles = this.tokenStorage.getUser().roles;
+		}
+	}
+
 	createForm() {
 		this.angForm = this.fb.group({
 			email: ['', [Validators.required, Validators.email]],
@@ -37,7 +50,26 @@ export class LoginComponent implements OnInit {
 		});
 	}
 
-	ngOnInit() {
+	onSubmit() {
+		console.log("hi");
+		this.authService.login(this.angForm).subscribe(
+			data => {
+				this.tokenStorage.saveToken(data.accessToken);
+				this.tokenStorage.saveUser(data);
+
+				// this.isLoggedIn = true;
+				this.roles = this.tokenStorage.getUser().roles;
+				this.reloadPage();
+				console.log(data);
+				console.log("onsubmit ", this.roles);
+			},
+			err => {
+				console.log("error ", err.error.message);
+			}
+		);
 	}
 
+	reloadPage() {
+		window.location.reload();
+	}
 }

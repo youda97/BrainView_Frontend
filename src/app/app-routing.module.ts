@@ -4,14 +4,14 @@ import { SurgeonComponent } from './surgeon/surgeon.component';
 import { PatientComponent } from './patient/patient.component';
 
 const routes: Routes = [
-	{
-		path: '',
-		loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
-	},
 	// {
 	// 	path: '',
-	// 	loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+	// 	loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
 	// },
+	{
+		path: '',
+		loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+	},
 	{
 		path: 'surgeons',
 		component: SurgeonComponent

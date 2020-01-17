@@ -1,8 +1,11 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
 import { AppComponent } from './app.component';
 
 // carbon-components-angular default imports
@@ -35,6 +38,8 @@ import { SurgeonComponent } from './surgeon/surgeon.component';
 import { PatientComponent } from './patient/patient.component';
 import { ModalComponent } from './header/modal.component';
 
+import { authInterceptorProviders } from './_helpers/auth.interceptor';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -48,6 +53,7 @@ import { ModalComponent } from './header/modal.component';
 		BrowserAnimationsModule,
 		FormsModule,
 		ReactiveFormsModule,
+		HttpClientModule,
 		AppRoutingModule,
 		UIShellModule,
 		Notification20Module,
@@ -71,6 +77,7 @@ import { ModalComponent } from './header/modal.component';
 		Password20Module,
 		Logout20Module
 	],
+	providers: [authInterceptorProviders],
 	bootstrap: [AppComponent],
 	entryComponents: [ModalComponent]
 })
