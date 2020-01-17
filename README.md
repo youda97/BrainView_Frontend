@@ -4,7 +4,7 @@
 
 ### Clone the repo
 ```
-git clone https://github.com/bryanforbes/intern-angular
+git clone https://github.com/youda97/BrainView.git
 cd intern-angular
 ```
 
