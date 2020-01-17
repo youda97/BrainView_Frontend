@@ -5,7 +5,7 @@
 ### Clone the repo
 ```
 git clone https://github.com/youda97/BrainView.git
-cd intern-angular
+cd BrainView
 ```
 
 ### Install npm packages
