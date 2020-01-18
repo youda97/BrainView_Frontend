@@ -45,14 +45,16 @@ export class LoginComponent implements OnInit {
 
 	createForm() {
 		this.angForm = this.fb.group({
-			email: ['', [Validators.required, Validators.email]],
-			password: ['', [Validators.required, Validators.minLength(6)]]
+			// email: ['', [Validators.required, Validators.email]],
+			// password: ['', [Validators.required, Validators.minLength(6)]]
+			email: ['', [Validators.required]],
+			password: ['', [Validators.required, Validators.minLength(4)]]
 		});
 	}
 
 	onSubmit() {
-		console.log("hi");
-		this.authService.login(this.angForm).subscribe(
+		console.log(this.angForm.value);
+		this.authService.login(this.angForm.value).subscribe(
 			data => {
 				this.tokenStorage.saveToken(data.accessToken);
 				this.tokenStorage.saveUser(data);
@@ -64,7 +66,7 @@ export class LoginComponent implements OnInit {
 				console.log("onsubmit ", this.roles);
 			},
 			err => {
-				console.log("error ", err.error.message);
+				console.log("error ", err);
 			}
 		);
 	}
