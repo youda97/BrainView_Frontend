@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../_services/auth.service';
 import { TokenStorageService } from '../../_services/token-storage.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
 	selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
 	constructor(
 		private authService: AuthService,
 		private tokenStorage: TokenStorageService,
+		private cookieService: CookieService,
 		private fb: FormBuilder) {
 		this.createForm();
 	}
@@ -30,7 +32,7 @@ export class LoginComponent implements OnInit {
 
 	get invalidPassword() {
 		if (this.angForm.controls['password'].invalid &&
-			(this.angForm.controls['password'].dirty || this.angForm.controls['email'].touched)) {
+			(this.angForm.controls['password'].dirty || this.angForm.controls['password'].touched)) {
 			return true;
 		}
 		return false;
@@ -53,17 +55,18 @@ export class LoginComponent implements OnInit {
 	}
 
 	onSubmit() {
-		console.log(this.angForm.value);
 		this.authService.login(this.angForm.value).subscribe(
 			data => {
 				this.tokenStorage.saveToken(data.accessToken);
 				this.tokenStorage.saveUser(data);
 
-				// this.isLoggedIn = true;
-				this.roles = this.tokenStorage.getUser().roles;
-				this.reloadPage();
 				console.log(data);
-				console.log("onsubmit ", this.roles);
+				console.log(document.cookie);
+				console.log(this.cookieService.getAll());
+				// this.isLoggedIn = true;
+				// this.roles = this.tokenStorage.getUser().roles;
+				// this.reloadPage();
+				// console.log("onsubmit ", this.roles);
 			},
 			err => {
 				console.log("error ", err);

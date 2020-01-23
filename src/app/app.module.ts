@@ -39,6 +39,7 @@ import { PatientComponent } from './patient/patient.component';
 import { ModalComponent } from './header/modal.component';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
 	declarations: [
@@ -77,7 +78,10 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
 		Password20Module,
 		Logout20Module
 	],
-	providers: [authInterceptorProviders],
+	providers: [
+		authInterceptorProviders,
+		CookieService
+	],
 	bootstrap: [AppComponent],
 	entryComponents: [ModalComponent]
 })
