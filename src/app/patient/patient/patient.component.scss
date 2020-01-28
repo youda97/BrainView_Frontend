@@ -1,35 +1,28 @@
-.bx--delete {
-	cursor: pointer;
-	fill: rgb(218, 30, 40);
-}
+.bx--tile-container {
+	display: flex;
+	flex-flow: row wrap;
 
-.bx--back-arrow {
-	cursor: pointer;
-	margin: auto 0;
-	margin-right: 5px;
-}
+	ibm-clickable-tile {
+		a:hover, a:visited, a:link, a:active {
+			text-decoration: none;
+		}
 
-.bx--pagination {
-	border-top: none;
-}
+		a {
+			flex-direction: column;
+			display: flex;
+			place-content: center;
+			align-items: center;
+			margin: 16px;
+			height: 210px;
+			width: 210px;
 
-.bx--data-table--sort th:first-of-type:not(.bx--table-column-checkbox):not(.bx--table-expand) {
-    padding-left: 1rem;
-}
-
-.bx--form {
-	background-color: white;
-	padding: 24px;
-
-	.bx--input {
-		margin-bottom: 1.6em;
+			.bx--card-title {
+				padding: 16px 32px 0;
+				font-weight: 500;
+				font-size: 16px;
+				text-align: center;
+				color: #000000;
+			}
+		}
 	}
-}
-
-.bx--save {
-	top: 4px;
-}
-
-td.undefined {
-	vertical-align: middle;
 }

@@ -1,102 +1,22 @@
-<ibm-table-container>
-		<ibm-table-header>
-			<div style="display: flex;">
-				<svg
-					ibmIconArrowLeft20
-					*ngIf="title === 'New Patient'"
-					class="bx--back-arrow"
-					(click)="back()"></svg>
-				<h4 ibmTableHeaderTitle>{{title}}</h4>
-			</div>
-		</ibm-table-header>
-		<ibm-table-toolbar>
-			<ibm-table-toolbar-content>
-				<ibm-table-toolbar-search
-					#search
-					*ngIf="title === 'Patients' || isEditing"
-					[expandable]="true"
-					(clear)="clear()"
-					(valueChange)="filterItem(search.value)">
-				</ibm-table-toolbar-search>
-				<button *ngIf="title === 'Patients' || isEditing" ibmButton="primary" size="sm" (click)="addNewPatient()" [disabled]="isEditing">
-					Add new patient
-					<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
-				</button>
-				<button
-					*ngIf="title === 'New Patient'"
-					ibmButton="primary"
-					size="sm"
-					[disabled]="disabledAdd"
-					(click)="add()">
-					Add
-					<ibm-icon-add20 class="bx--btn__icon"></ibm-icon-add20>
-				</button>
-			</ibm-table-toolbar-content>
-		</ibm-table-toolbar>
-
-		<ibm-table
-			*ngIf="title === 'Patients' || isEditing"
-			[model]="model"
-			[size]="md"
-			[showSelectionColumn]="false"
-			[enableSingleSelect]="false"
-			[striped]="false"
-			(sort)="simpleSort($event)">
-		</ibm-table>
-		<ibm-pagination
-			*ngIf="title === 'Patients' || isEditing"
-			[model]="model"
-			(selectPage)="selectPage($event)">
-		</ibm-pagination>
-
-		<ibm-table
-			*ngIf="title === 'New Patient'"
-			[model]="fakeModel"
-			[size]="md"
-			[showSelectionColumn]="false">
-		</ibm-table>
-		<form *ngIf="title === 'New Patient'" class="bx--form" [formGroup]="angForm" novalidate>
-			<ibm-label class="bx--input" [invalid]="invalidName" invalidText='A valid value is required'>Name<input name="name" ibmText placeholder="Name" formControlName="name"></ibm-label>
-			<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid value is required'>Email<input ibmText name="email" placeholder="Email" formControlName="email"></ibm-label>
-			<ibm-label class="bx--input bx--form-item">
-				<label class="bx--label">Surgeon</label>
-				<div class="bx--text-input__field-wrapper">
-					<ibm-combo-box
-						placeholder="select surgeon"
-						[invalid]="invalidSurgeon"
-						invalidText='A valid value is required'
-						style="width: 100%;"
-						[items]="surgeons"
-						(selected)="newPatientSelected($event)">
-						<ibm-dropdown-list></ibm-dropdown-list>
-					</ibm-combo-box>
-				</div>
-			</ibm-label>
-		</form>
-	</ibm-table-container>
-
-	<ng-template #deleteTemplate let-data="data">
-		<svg ibmIconDelete20 class="bx--delete" (click)="openModal($event)"></svg>
-	</ng-template>
-
-	<ng-template #dropdownTemplate let-data="data">
-		<ibm-combo-box
-			placeholder="select surgeon"
-			style="width: 200px;"
-			[items]="data.surgeons"
-			(selected)="selected($event, data)">
-			<ibm-dropdown-list></ibm-dropdown-list>
-		</ibm-combo-box>
-	</ng-template>
-
-	<ng-template #expandedTemplate let-data="data">
-		{{ assignDefaults(data) }}
-		<form class="bx--form" [formGroup]="angForm" novalidate>
-			<ibm-label class="bx--input" [invalid]="invalidName" invalidText='A valid value is required'>Name<input ibmText name="name" placeholder="Name" formControlName="name"></ibm-label>
-			<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid value is required'>Email<input ibmText name="email" placeholder="Email" formControlName="email"></ibm-label>
-			<button [disabled]="angForm.invalid" ibmButton="primary" size="sm" (click)="save(data, $event)">
-				Save
-				<ibm-icon-save20 class="bx--btn__icon bx--save"></ibm-icon-save20>
-			</button>
-		</form>
-	</ng-template>
+<div class="bx--tile-container">
+	<ibm-clickable-tile (click)="openSearchModal($event)">
+		<svg xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet"
+			style="will-change: transform;" aria-hidden="true" width="56" height="56" viewBox="0 0 32 32">
+			<path d="M22,11h4a1,1,0,0,1,1,1v2a0,0,0,0,1,0,0H21a0,0,0,0,1,0,0V12A1,1,0,0,1,22,11Z"></path>
+			<circle cx="24" cy="8" r="2"></circle>
+			<path
+				d="M30 18H18a2.0023 2.0023 0 0 1-2-2V4a2.002 2.002 0 0 1 2-2H30a2.0023 2.0023 0 0 1 2 2V16A2.0027 2.0027 0 0 1 30 18zM18 4V16H30.001L30 4zM15 30H13V26a2.9465 2.9465 0 0 0-3-3H6a2.9465 2.9465 0 0 0-3 3v4H1V26a4.9514 4.9514 0 0 1 5-5h4a4.9514 4.9514 0 0 1 5 5zM8 11a3 3 0 0 1 0 6 3 3 0 0 1 0-6M8 9A5 5 0 0 0 8 19 5 5 0 0 0 8 9z">
+			</path>
+		</svg>
+		<div class="bx--card-title">Search Patient</div>
+	</ibm-clickable-tile>
+	<ibm-clickable-tile (click)="openAddModal($event)">
+		<svg xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet"
+			style="will-change: transform;" aria-hidden="true" width="56" height="56" viewBox="0 0 32 32">
+			<path
+				d="M32 14L28 14 28 10 26 10 26 14 22 14 22 16 26 16 26 20 28 20 28 16 32 16 32 14zM12 4A5 5 0 1 1 7 9a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7A7 7 0 0 0 12 2zM22 30H20V25a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v5H2V25a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7z">
+			</path>
+		</svg>
+		<div class="bx--card-title">Add Patient</div>
+	</ibm-clickable-tile>
+</div>

@@ -18,7 +18,8 @@ export class UserService {
         return this.http.get(API_URL + 'patient', { responseType: 'text' });
     } 
 
-    getAdminBoard(): Observable<any> {
-        return this.http.get(API_URL + 'admin', { responseType: 'text' });
+    getAdminBoard(card, surgeon): Observable<any> {
+        var options = '/patient?healthcard=' + card + '&surgeon=' + surgeon;
+        return this.http.get(API_URL + 'admin' + options , { responseType: 'text' });
     }
 }
