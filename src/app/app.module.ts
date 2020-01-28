@@ -13,13 +13,9 @@ import {
 	UIShellModule,
 	DialogModule,
 	PlaceholderModule,
-	TableModule,
-	PaginationModule,
-	SearchModule,
 	ButtonModule,
 	InputModule,
-	ModalModule,
-	ComboBoxModule
+	ModalModule
 } from 'carbon-components-angular';
 import { Notification20Module } from '@carbon/icons-angular/lib/notification/20';
 import { UserAvatar20Module } from '@carbon/icons-angular/lib/user--avatar/20';
@@ -34,8 +30,6 @@ import { Password20Module } from '@carbon/icons-angular/lib/password/20';
 import { Logout20Module } from '@carbon/icons-angular/lib/logout/20';
 
 import { HeaderComponent } from './header/header.component';
-import { SurgeonComponent } from './surgeon/surgeon.component';
-import { PatientComponent } from './patient/patient.component';
 import { ModalComponent } from './header/modal.component';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
@@ -45,8 +39,6 @@ import { CookieService } from 'ngx-cookie-service';
 	declarations: [
 		AppComponent,
 		HeaderComponent,
-		SurgeonComponent,
-		PatientComponent,
 		ModalComponent
 	],
 	imports: [
@@ -60,13 +52,9 @@ import { CookieService } from 'ngx-cookie-service';
 		Notification20Module,
 		DialogModule,
 		PlaceholderModule,
-		TableModule,
-		PaginationModule,
-		SearchModule,
 		ButtonModule,
 		InputModule,
 		ModalModule,
-		ComboBoxModule,
 		UserAvatar20Module,
 		AppSwitcher20Module,
 		Cognitive20Module,

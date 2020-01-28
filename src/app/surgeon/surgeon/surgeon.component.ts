@@ -20,7 +20,7 @@ import {
 } from 'carbon-components-angular';
 import { FormGroup, FormBuilder,  Validators } from '@angular/forms';
 // import custom validator to validate that password and confirm password fields match
-import { MustMatch } from '../_helpers/must-match.validator';
+import { MustMatch } from '../../_helpers/must-match.validator';
 
 function sort(model, index: number) {
 	if (model.header[index].sorted) {

@@ -1,4 +1,4 @@
-<ibm-tile class="bx--login">
+<ibm-tile *ngIf="!tokenStorage.getToken()" class="bx--login">
 	<form style="width: 100%;" [formGroup]="angForm" novalidate>
 		<span class="bx--title">
 			Welcome

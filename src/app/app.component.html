@@ -1,4 +1,12 @@
-<!-- <app-header></app-header>
-<main class="bx--content bx--push-content"> -->
+<app-header *ngIf="isLoggedIn"></app-header>
+<main
+	*ngIf="isLoggedIn; else login"
+	class="bx--content"
+	[ngStyle]="{'margin-left': role !== 'ROLE_ADMIN' ? 0 : inherit}"
+	[ngClass]="{'bx--push-content': role === 'ROLE_ADMIN'}">
 	<router-outlet></router-outlet>
-<!-- </main> -->
+</main>
+
+<ng-template #login>
+	<router-outlet></router-outlet>
+</ng-template>
