@@ -18,6 +18,7 @@ import {
 import { Add20Module } from '@carbon/icons-angular/lib/add/20';
 import { Delete20Module } from '@carbon/icons-angular/lib/delete/20';
 import { Save20Module } from '@carbon/icons-angular/lib/save/20';
+import { ArrowLeft20Module } from '@carbon/icons-angular/lib/arrow--left/20';
 
 @NgModule({
 	declarations: [SurgeonComponent],
@@ -35,7 +36,8 @@ import { Save20Module } from '@carbon/icons-angular/lib/save/20';
         ComboBoxModule,
         Add20Module,
         Delete20Module,
-        Save20Module
+        Save20Module,
+        ArrowLeft20Module
 	]
 })
 export class SurgeonModule { }

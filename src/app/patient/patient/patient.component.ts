@@ -9,6 +9,8 @@ import {
 } from 'carbon-components-angular';
 import { FormGroup, FormBuilder,  Validators } from '@angular/forms';
 import { SearchPatientComponent } from './search-patient.component'
+import { AddPatientComponent } from './add-patient.component'
+import { TokenStorageService } from '../../_services/token-storage.service';
 
 @Component({
 	selector: 'app-patient',
@@ -29,21 +31,32 @@ export class PatientComponent {
 		},
 	] as ModalButton[];
 
-	constructor(protected modalService: ModalService) {}
+	constructor(protected modalService: ModalService, protected tokenStorage: TokenStorageService) {}
 
-	openSearchModal() {
+	openModelModal() {
 		event.preventDefault();
 		this.modalService.create({
-			component: SearchPatientComponent
+			component: SearchPatientComponent,
+			inputs: {
+				modalText: 'model',
+			},
+		});
+	}
+
+	openSurgeonModal() {
+		event.preventDefault();
+		this.modalService.create({
+			component: SearchPatientComponent,
+			inputs: {
+				modalText: 'surgeon',
+			},
 		});
 	}
 
 	openAddModal() {
 		event.preventDefault();
-		this.modalService.show({
-			title: 'Add',
-			content: 'Functionality is still WIP',
-			buttons: this.buttons
+		this.modalService.create({
+			component: AddPatientComponent
 		});
 	}
 }

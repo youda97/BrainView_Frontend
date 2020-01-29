@@ -1,14 +1,23 @@
 <div class="bx--tile-container">
-	<ibm-clickable-tile (click)="openSearchModal($event)">
-		<svg xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet"
-			style="will-change: transform;" aria-hidden="true" width="56" height="56" viewBox="0 0 32 32">
-			<path d="M22,11h4a1,1,0,0,1,1,1v2a0,0,0,0,1,0,0H21a0,0,0,0,1,0,0V12A1,1,0,0,1,22,11Z"></path>
-			<circle cx="24" cy="8" r="2"></circle>
+	<ibm-clickable-tile (click)="openModelModal($event)">
+		<svg focusable="false" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" width="56" height="56"
+			viewBox="0 0 32 32" aria-hidden="true" style="will-change: transform;">
 			<path
-				d="M30 18H18a2.0023 2.0023 0 0 1-2-2V4a2.002 2.002 0 0 1 2-2H30a2.0023 2.0023 0 0 1 2 2V16A2.0027 2.0027 0 0 1 30 18zM18 4V16H30.001L30 4zM15 30H13V26a2.9465 2.9465 0 0 0-3-3H6a2.9465 2.9465 0 0 0-3 3v4H1V26a4.9514 4.9514 0 0 1 5-5h4a4.9514 4.9514 0 0 1 5 5zM8 11a3 3 0 0 1 0 6 3 3 0 0 1 0-6M8 9A5 5 0 0 0 8 19 5 5 0 0 0 8 9z">
+				d="M11 2L2 2 2 11 4 11 4 4 11 4 11 2zM2 21L2 30 11 30 11 28 4 28 4 21 2 21zM30 11L30 2 21 2 21 4 28 4 28 11 30 11zM21 30L30 30 30 21 28 21 28 28 21 28 21 30zM25.49 10.13l-9-5a1 1 0 0 0-1 0l-9 5A1 1 0 0 0 6 11V21a1 1 0 0 0 .51.87l9 5a1 1 0 0 0 1 0l9-5A1 1 0 0 0 26 21V11A1 1 0 0 0 25.49 10.13zM16 7.14L22.94 11 16 14.86 9.06 11zM8 12.7l7 3.89V24.3L8 20.41zm9 11.6V16.59l7-3.89v7.71z">
 			</path>
+			<title>Update Patient Model</title>
 		</svg>
-		<div class="bx--card-title">Search Patient</div>
+		<div class="bx--card-title">Update Patient Model</div>
+	</ibm-clickable-tile>
+	<ibm-clickable-tile *ngIf="tokenStorage.getUser().role === 'ROLE_ADMIN'" (click)="openSurgeonModal($event)">
+		<svg focusable="false" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" width="56" height="56"
+			viewBox="0 0 32 32" aria-hidden="true" style="will-change: transform;">
+			<path
+				d="M6 21V20H4v1a7 7 0 0 0 7 7h3V26H11A5 5 0 0 1 6 21zM24 11v1h2V11a7 7 0 0 0-7-7H16V6h3A5 5 0 0 1 24 11zM11 11H5a3 3 0 0 0-3 3v2H4V14a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2V14A3 3 0 0 0 11 11zM8 10A4 4 0 1 0 4 6 4 4 0 0 0 8 10zM8 4A2 2 0 1 1 6 6 2 2 0 0 1 8 4zM27 25H21a3 3 0 0 0-3 3v2h2V28a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2V28A3 3 0 0 0 27 25zM20 20a4 4 0 1 0 4-4A4 4 0 0 0 20 20zm6 0a2 2 0 1 1-2-2A2 2 0 0 1 26 20z">
+			</path>
+			<title>Update Assigned Surgeon</title>
+		</svg>
+		<div class="bx--card-title">Update Assigned Surgeon</div>
 	</ibm-clickable-tile>
 	<ibm-clickable-tile (click)="openAddModal($event)">
 		<svg xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet"
@@ -16,6 +25,7 @@
 			<path
 				d="M32 14L28 14 28 10 26 10 26 14 22 14 22 16 26 16 26 20 28 20 28 16 32 16 32 14zM12 4A5 5 0 1 1 7 9a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7A7 7 0 0 0 12 2zM22 30H20V25a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v5H2V25a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7z">
 			</path>
+			<title>Add Patient</title>
 		</svg>
 		<div class="bx--card-title">Add Patient</div>
 	</ibm-clickable-tile>

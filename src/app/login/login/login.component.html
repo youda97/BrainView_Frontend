@@ -8,7 +8,7 @@
 		</span>
 
 		<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid email is required'>Email<input formControlName="email" ibmText></ibm-label>
-		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input formControlName="password" ibmText></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input type="password" formControlName="password" ibmText></ibm-label>
 
 		<button
 			type="submit"
