@@ -1,4 +1,17 @@
-<ibm-tile *ngIf="!tokenStorage.getToken()" class="bx--login">
+<ibm-tile *ngIf="!isLoggedIn && this.tokenStorage.getLoggoutStatus() === 'true'" class="bx--login">
+	<div class="notifications">
+		<ibm-notification
+			*ngIf="showError"
+			(close)="showError = false"
+			[notificationObj]="{
+				type: 'error',
+				title: 'Error',
+				message: 'Incorrect username or password',
+				showClose: true,
+				lowContrast: true
+			}">
+		</ibm-notification>
+	</div>
 	<form style="width: 100%;" [formGroup]="angForm" novalidate>
 		<span class="bx--title">
 			Welcome
@@ -8,11 +21,11 @@
 		</span>
 
 		<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid email is required'>Email<input formControlName="email" ibmText></ibm-label>
-		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input type="password" formControlName="password" ibmText></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input type="password" minlength="5" formControlName="password" ibmText></ibm-label>
 
 		<button
 			type="submit"
-			[disabled]="angForm.pristine || angForm.invalid"
+			[disabled]="disabled"
 			ibmButton="primary"
 			class="bx--button"
 			(click)="onSubmit()">

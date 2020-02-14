@@ -60,3 +60,22 @@
 		}
 	}
 }
+
+.notifications {
+	position: fixed;
+	margin-left: -40px;
+	top: 0;
+
+	.bx--inline-notification--low-contrast {
+		animation: 0.5s ease-out 0s 1 slideInFromLeft;
+	}
+}
+
+@keyframes slideInFromLeft {
+	0% {
+	  transform: translateX(-45%);
+	}
+	100% {
+	  transform: translateX(0);
+	}
+  }

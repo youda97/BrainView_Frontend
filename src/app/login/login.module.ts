@@ -5,7 +5,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login/login.component';
 
-import { TilesModule, InputModule, ButtonModule } from 'carbon-components-angular';
+import {
+	TilesModule,
+	InputModule,
+	ButtonModule,
+	NotificationModule
+} from 'carbon-components-angular';
 
 @NgModule({
 	declarations: [LoginComponent],
@@ -15,7 +20,8 @@ import { TilesModule, InputModule, ButtonModule } from 'carbon-components-angula
 		LoginRoutingModule,
 		TilesModule,
 		InputModule,
-		ButtonModule
+		ButtonModule,
+		NotificationModule
 	]
 })
 export class LoginModule { }

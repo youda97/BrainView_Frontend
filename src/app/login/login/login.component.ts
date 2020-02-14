@@ -12,22 +12,26 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements AfterContentInit {
 	angForm: FormGroup;
-	// isLoggedIn = false;
+	isLoggedIn = false;
 	role = '';
+	showError = false;
 
 	constructor(
-		private authService: AuthService,
-		private tokenStorage: TokenStorageService,
-		private cookieService: CookieService,
-		private router: Router,
-		private fb: FormBuilder) {
+		protected authService: AuthService,
+		protected tokenStorage: TokenStorageService,
+		protected cookieService: CookieService,
+		protected router: Router,
+		protected fb: FormBuilder) {
 		this.createForm();
 	}
 
 	get invalidEmail() {
+		if (this.angForm.value.email === 'admin') {
+			return false;
+		}
 		if (this.angForm.controls['email'].invalid &&
 			(this.angForm.controls['email'].dirty || this.angForm.controls['email'].touched)) {
-			return true;
+				return true;
 		}
 		return false;
 	}
@@ -40,9 +44,16 @@ export class LoginComponent implements AfterContentInit {
 		return false;
 	}
 
+	get disabled() {
+		if (this.angForm.value.email === '' || this.angForm.value.password === '') {
+			return true;
+		}
+		return this.angForm.pristine || this.invalidEmail || this.invalidPassword;
+	}
+
 	ngAfterContentInit() {
 		if (this.tokenStorage.getToken()) {
-			// this.isLoggedIn = true;
+			this.isLoggedIn = true;
 			this.role = this.tokenStorage.getUser().role;
 			const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
 			let username = this.tokenStorage.getUser().email
@@ -54,15 +65,16 @@ export class LoginComponent implements AfterContentInit {
 	}
 
 	createForm() {
+		// TODO: Make admin password 6 characters
 		this.angForm = this.fb.group({
-			// email: ['', [Validators.required, Validators.email]],
-			// password: ['', [Validators.required, Validators.minLength(6)]]
-			email: ['', [Validators.required]],
-			password: ['', [Validators.required, Validators.minLength(4)]]
+			email: ['', [Validators.required, Validators.email]],
+			password: ['', [Validators.required, Validators.minLength(5)]]
 		});
 	}
 
 	onSubmit() {
+		this.showError = false;
+
 		this.authService.login(this.angForm.value).subscribe(
 			() => {
 				const user = {
@@ -72,11 +84,13 @@ export class LoginComponent implements AfterContentInit {
 				this.tokenStorage.saveToken(this.cookieService.get('JSESSIONID'));
 				this.tokenStorage.saveUser(user);
 
-				// this.isLoggedIn = true;
+				this.tokenStorage.setLoggoutStatus('false');
+				this.isLoggedIn = true;
 				this.role = this.tokenStorage.getUser().role;
 				this.reloadPage();
 			},
 			err => {
+				this.showError = true;
 				console.log("error ", err);
 			}
 		);
