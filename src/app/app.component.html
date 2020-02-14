@@ -2,8 +2,7 @@
 <main
 	*ngIf="isLoggedIn; else login"
 	class="bx--content"
-	[ngStyle]="{'margin-left': role !== 'ROLE_ADMIN' ? 0 : inherit}"
-	[ngClass]="{'bx--push-content': role === 'ROLE_ADMIN'}">
+	[ngStyle]="{'margin-left': isLarge ? 0 : inherit}">
 	<router-outlet></router-outlet>
 </main>
 

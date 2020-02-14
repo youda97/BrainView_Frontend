@@ -1,5 +1,8 @@
 <ibm-header name="BrainView" brand="">
-	<ibm-hamburger *ngIf="role === 'Admin' && hasHamburger" [active]="active" (selected)="active = !active" (click)="expanded()"></ibm-hamburger>
+	<ibm-header-navigation>
+		<ibm-header-item [route]="[username + '/patients']">Patients</ibm-header-item>
+		<ibm-header-item *ngIf="role === 'Admin'" [route]="[username + '/surgeons']">Surgeons</ibm-header-item>
+	</ibm-header-navigation>
 	<ibm-header-global>
 		<ibm-header-action class="bx--user" #FirstAction title="action">
 			<span
@@ -20,7 +23,7 @@
 		</ibm-header-action>
 	</ibm-header-global>
 </ibm-header>
-<ibm-sidenav *ngIf="role === 'Admin'" [expanded]="active">
+<ibm-sidenav *ngIf="!isLarge && role === 'Admin'" [expanded]="false">
 	<ibm-sidenav-item [route]="[username + '/patients']">
 		<svg icon width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
 			<path
