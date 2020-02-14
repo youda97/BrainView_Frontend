@@ -85,8 +85,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		protected elementRef: ElementRef,
 		protected modalService: ModalService,
 		protected fb: FormBuilder,
-		private userService: UserService,
-		private http: HttpClient) {
+		protected userService: UserService,
+		protected http: HttpClient) {
 		this.createForm();
 	}
 
