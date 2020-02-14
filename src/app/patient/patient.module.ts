@@ -8,6 +8,7 @@ import { PatientComponent } from './patient/patient.component';
 import { SearchPatientComponent } from './patient/search-patient.component'
 import { AddPatientComponent } from './patient/add-patient.component'
 
+import { FileUploaderModule } from '../file-uploader/file-uploader.module'
 import {
     TableModule,
 	PaginationModule,
@@ -20,10 +21,12 @@ import {
     PlaceholderModule,
     GridModule,
     TilesModule,
-    FileUploaderModule,
     NotificationService,
     NotificationModule,
-    DropdownModule
+    DropdownModule,
+    LoadingModule,
+    LinkModule,
+    ContentSwitcherModule
 } from 'carbon-components-angular';
 
 import { Add20Module } from '@carbon/icons-angular/lib/add/20';
@@ -60,7 +63,10 @@ import { authInterceptorProviders } from '../_helpers/auth.interceptor';
         TilesModule,
         FileUploaderModule,
         DropdownModule,
-        NotificationModule
+        NotificationModule,
+        LoadingModule,
+        LinkModule,
+        ContentSwitcherModule
     ],
     providers: [authInterceptorProviders, NotificationService],
     entryComponents: [SearchPatientComponent, AddPatientComponent]

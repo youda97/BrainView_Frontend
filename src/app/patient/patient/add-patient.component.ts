@@ -1,11 +1,11 @@
-import { Component, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewEncapsulation, HostListener } from '@angular/core';
 import { BaseModal, ModalService } from 'carbon-components-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../_services/user.service';
 import { NotificationService } from 'carbon-components-angular';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { TokenStorageService } from '../../_services/token-storage.service';
+import { DataService } from '../../_services/data.service';
+import {saveAs as importedSaveAs} from "file-saver";
 
 @Component({
 	selector: 'app-sample-modal',
@@ -15,23 +15,54 @@ import { TokenStorageService } from '../../_services/token-storage.service';
 			<p class="bx--modal-header__heading bx--type-beta">Add Patient</p>
 		</ibm-modal-header>
         <section class="bx--modal-content">
-            <ibm-notification *ngIf="isSuccess" [notificationObj]="{
-                type: 'success',
-                title: 'Success',
-                message: 'Patient has been added',
-                showClose: true,
-                lowContrast: true}">
-            </ibm-notification>
+            <div class="notifications">
+                <ibm-notification 
+                    *ngIf="showSuccess" 
+                    (close)="showSuccess = false;"
+                    [notificationObj]="{
+                        type: 'success',
+                        title: 'Success',
+                        message: 'Patient has been added',
+                        showClose: true,
+                        lowContrast: true
+                    }">
+                </ibm-notification>
+                <ibm-notification
+					*ngIf="showError"
+					(close)="showError = false"
+					[notificationObj]="{
+						type: 'error',
+						title: 'Error',
+						message: 'Patient was not added',
+						showClose: true,
+						lowContrast: true
+					}">
+                </ibm-notification>
+                <ibm-notification
+					*ngIf="showSurgeonError"
+					(close)="showSurgeonError = false"
+					[notificationObj]="{
+						type: 'error',
+						title: 'Error',
+						message: 'Surgeons cannot be loaded',
+						showClose: true,
+						lowContrast: true
+					}">
+				</ibm-notification>
+            </div>
 
 			<form class="bx--form" [formGroup]="angForm" novalidate>
-                
                 <ibm-label
-                class="bx--input"
-                [invalid]="invalidHealthCard"
-                invalidText='A value is required'>
+                    class="bx--input"
+                    [invalid]="invalidHealthCard"
+                    invalidText='A valid health card is required'>
                     Health card number
                     <input
                         ibmText
+                        (keypress)="limitInput($event)"
+                        (keyup)="formatHealthcard($event)"
+                        maxlength="15"
+                        autocomplete="off"
                         theme="light"
                         name="healthCard"
                         formControlName="healthCard"
@@ -44,7 +75,7 @@ import { TokenStorageService } from '../../_services/token-storage.service';
                         <ibm-combo-box
                             placeholder="Select Surgeon"
                             [invalid]="invalidSurgeon"
-                            invalidText='A valid value is required'
+                            invalidText='A surgeon is required'
                             style="width: 100%;"
                             [items]="surgeons"
                             (selected)="selectSurgeon($event)">
@@ -55,9 +86,12 @@ import { TokenStorageService } from '../../_services/token-storage.service';
                 
                 <ibm-file-uploader
                     title="Model"
-                    description="only .obj files. 16mb max file size."
+                    description="only .obj files. 4mb max file size."
                     [(files)]="files"
-                    [accept]="accept">
+					[multiple]="false"
+					[accept]="accept"
+					(download)="downloadFile()"
+                    (filesChange)="onFileAdd()">
                 </ibm-file-uploader>
             </form>
         </section>
@@ -66,138 +100,249 @@ import { TokenStorageService } from '../../_services/token-storage.service';
         <button class="bx--btn bx--btn--secondary" (click)="closeModal()">
             Cancel
         </button>
-		<button class="bx--btn bx--btn--primary" (click)="add()">
+		<button class="bx--btn bx--btn--primary" (click)="add()" [disabled]="disabled">
             Add
         </button>
         </ibm-modal-footer>
 	  </ibm-modal>
     `,
     styles: [`
-        .bx--file__selected-file {
-            margin-top: 20px;
-            background-color: #f4f4f4; 
-        }
-
         .bx--list-box input[role='combobox'] {
             background-color: #f4f4f4;
         }
+
+        .notifications {
+            position: fixed;
+			width: 100%;
+			max-width: 34.5rem;
+			top: 0;
+			z-index: 1;
+        }
+
+        .bx--inline-notification--low-contrast {
+			animation: 0.5s ease-out 0s 1 slideInFromLeft;
+		}
+        
+        @keyframes slideInFromLeft {
+			0% {
+				transform: translateX(-45%);
+			}
+			100% {
+				transform: translateX(0);
+			}
+		}
     `],
     encapsulation: ViewEncapsulation.None
 })
 export class AddPatientComponent extends BaseModal implements OnInit {
-    static notificationCount = 0;
+    role = '';
+    angForm: FormGroup;
 
-	angForm: FormGroup;
-	disabled = true;
+    invalidLength = true;
+
     surgeons = [];
+    isSurgeonSelected = false;
+    dropdownTouched = false;
 
-    notificationId = `notification-${AddPatientComponent.notificationCount}`;
+    blob: Blob;
     files = new Set<any>();
     accept = ['.obj'];
 
-    invalidHealthCard = false;
-    invalidSurgeon = false;
+    showSuccess = false;
+    showError = false;
+    showSurgeonError = false;
 
-    isSuccess = false;
+    protected maxSize = 4000000;
 
-    protected maxSize = 500000;
+    get invalidHealthCard() {
+        if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
+            (this.angForm.controls['healthCard'].dirty || this.angForm.controls['healthCard'].touched)) {
+            return true;
+        }
+        return false;
+    }
+
+    get invalidSurgeon() {
+        return !this.isSurgeonSelected && this.dropdownTouched; 
+    }
+
+    get disabled() {
+		if (this.files.size > 0) {
+            let temp;
+            if (this.role === 'ROLE_ADMIN') {
+                temp = this.isSurgeonSelected &&
+                !(this.angForm.pristine || this.angForm.invalid) &&
+                !this.getFileItem().invalid;
+            } else {
+                temp = !(this.angForm.pristine || this.angForm.invalid) &&
+                !this.getFileItem().invalid;
+            }
+
+            return !temp;
+        } else {
+            return true;
+        }
+    }
 
 	constructor(
 		protected modalService: ModalService,
 		protected fb: FormBuilder,
-        private userService: UserService,
+        protected userService: UserService,
         protected notificationService: NotificationService,
         protected elementRef: ElementRef,
-        private tokenStorage: TokenStorageService) {
+        protected tokenStorage: TokenStorageService,
+        protected data: DataService) {
         super();
-        AddPatientComponent.notificationCount++;
 		this.createForm();
 	}
 
     ngOnInit() {
+        if (this.tokenStorage.getToken()) {
+			this.role = this.tokenStorage.getUser().role;
+        }
+
+        if (this.role === 'ROLE_USER') {
+            return;
+        }
+        
         this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
 			data => {
                 this.surgeons = data.surgeons
-			  console.log('model ', data);
+                this.showSurgeonError = false;
 			},
 			err => {
-			  console.log(err);
+                this.showSurgeonError = true;
+			    console.log(err);
 			}
 		);
     }
 
 	createForm() {
 		this.angForm = this.fb.group({
-            healthCard: ['', Validators.required],
-            surgeon: ['', Validators.required]
+            healthCard: ['', Validators.required]
         });
-	}
+    }
       
-    selectSurgeon() {
-
+    selectSurgeon(event) {
+        this.surgeons.forEach(surgeon => {
+			surgeon.selected = false;
+			if (surgeon.content === event.item.content) {
+                surgeon.selected = true;
+                this.isSurgeonSelected = true;
+			}
+        }); 
     }
 
+    onFileAdd() {
+        const fileItem = this.getFileItem();
+        if (this.files.size > 0) {
+            this.blob = fileItem.file as Blob;
+
+            if (!fileItem.uploaded) {
+                if (fileItem.file.size > this.maxSize) {
+                    fileItem.state = 'edit';
+                    fileItem.invalid = true;
+                    fileItem.invalidText = 'File size exceeds limit';
+                }
+                return;
+            }
+        }
+    }
+
+    downloadFile() {
+		importedSaveAs(this.blob, this.getFileItem().file.name);
+	}
+
 	add() {
+        const fileItem = this.getFileItem();
+
+        let input = '';
+        if (this.role === 'ROLE_ADMIN') {
+            input =  this.elementRef.nativeElement.querySelector('.bx--combo-box').querySelector('input');
+        }
+
+        this.showError = false;
+        this.data.manageFile(fileItem, this.angForm, "POST", input).subscribe(
+            ()  => {
+                if (fileItem.file.size < this.maxSize) {
+                    fileItem.state = 'complete'
+                    fileItem.uploaded = true;
+                    this.showSuccess = true;
+                    this.showError = false;
+                    setTimeout(() => {
+                        this.showSuccess = false;
+                    }, 5000);
+                }
+            },
+            error => {
+                this.showError = true;
+                console.log("error ", error);
+            }
+        );
+    }
+
+    getFileItem() {
         //get iterator:
         var it = this.files.values();
         //get first entry:
         var first = it.next();
         //get value out of the iterator entry:
-        var value = first.value;
-
-
-        console.log(value.file);
-        console.log(this.angForm.value.healthCard)
-        // console.log(input.value)
-
-
-        Observable.create(observer => {
-            var formData: FormData = new FormData()
-            var xhr: XMLHttpRequest = new XMLHttpRequest();
+        return first.value;
+    }
     
-            formData.append("file", value.file);
-            formData.append('healthcard', this.angForm.value.healthCard);
-            if (this.tokenStorage.getUser().role === 'ROLE_ADMIN') {
-                const input =  this.elementRef.nativeElement.querySelector('.bx--combo-box').querySelector('input');
-                formData.append('surgeon', input.value);
-            } else {
-                formData.append('surgeon', this.tokenStorage.getUser().email);
-            }
+    limitInput(event) {
+        const input = event.target.value.replace(/-/g, '');
+        const numRegExp = new RegExp(/^[0-9]*$/); 
+        const alphaRegExp = new RegExp(/^[a-zA-Z]+$/); 
 
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        // observer.next(JSON.parse(xhr.response));
-                        observer.complete();
-                    } else {
-                        observer.error(xhr.response);
-                    }
-                }
-            };
+        if (input.length < 10 && !numRegExp.test(event.key)) {
+            event.preventDefault();  
+        } else if (input.length >= 10 && !alphaRegExp.test(event.key)) {
+            event.preventDefault();
+        }
+    }
+
+    formatHealthcard(event) {
+        let output = '';
+        let idx = 0;
+        const format = [4, 3, 3, 2];
+        const input = event.target.value.replace(/-/g, '');
+
+        for (var i = 0; i < format.length && idx < input.length; i++) {
+            output += input.substr(idx, format[i]);
+            if (idx + format[i] < input.length) {
+                output += '-';
+            }
+            idx += format[i];
+        }
+        output += input.substr(idx);
     
-            if (this.tokenStorage.getUser().role === 'ROLE_ADMIN') {
-                xhr.open('POST', 'http://localhost:8080/api/admin/patient', true);
-                this.isSuccess = true;
-                // setTimeout(() => {
-                // 	this.isSuccess = false;
-                // }, 5000);
-            } else {
-                xhr.open('POST', 'http://localhost:8080/api/patient', true);
-                this.isSuccess = true;
-                // setTimeout(() => {
-                // 	this.isSuccess = false;
-                // }, 5000);
+        if (input.length > 0) {
+            event.target.value = output;
+        }
+
+        this.invalidLength = event.target.value.length < 15 ? true : false;
+    }
+
+    @HostListener('focusout',  ['$event'])
+	onFocousout(event) {
+		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+        
+        
+        if (dropdown && dropdown.contains(event.target)) {
+			this.dropdownTouched = true;
+		}
+    }
+
+    @HostListener('keyup', ['$event'])
+	onKeyup(event) {
+        const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+        if (dropdown) {
+            if (!dropdown.contains(event.target)) {
+                return;
             }
-            xhr.withCredentials = true;
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.send(formData);
-        }).subscribe(
-			data => {
-                console.log("data ", data);
-            },
-            err => {
-                console.log("error ", err);
-            }
-        );
-	}
+            const inputtedSurgeon = dropdown.querySelector('input').value; 
+            this.isSurgeonSelected = !this.surgeons.every(surgeon => surgeon.content !== inputtedSurgeon);
+        }
+    }
 }
