@@ -40,7 +40,7 @@ import { FileItem } from 'carbon-components-angular/file-uploader/file-item.inte
 					[notificationObj]="{
 						type: 'info',
 						title: 'Info',
-						message: 'Patient has been found',
+						message: patientName + ' has been found',
 						showClose: true,
 						lowContrast: true
 					}">
@@ -225,6 +225,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	showDeleteSuccess = false;
 	showInfo = false;
 	showError = false;
+	patientName = "Pateint";
 
 	buttons = [{
 			text: 'Cancel',
@@ -344,11 +345,16 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 				this.showError = false;
 
 				if (this.role === 'ROLE_USER') {
+					this.userService.getUserBoard(`patient/info?healthcard=${this.angForm.value.healthCard}`, 'json').subscribe(
+						data => {
+							this.patientName = data.firstName + " " + data.lastName;
+						},
+						err => {
+							console.log(err);
+						}
+					);
 					this.isLoading = false;
 					this.showInfo = true;
-					setTimeout(() => {
-						this.showInfo = false;
-					}, 5000);
 				}
 			},
 			err => {
@@ -370,13 +376,16 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 						this.dropdownDisabled = false;
 						this.isSurgeonsFound = true;
 		
-						const items = data.surgeons
-						this.userService.getAdminBoard(`/patient/surgeon?healthcard=${this.angForm.value.healthCard}`, 'json').subscribe(
+						const items = data.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }))
+
+						this.userService.getUserBoard(`patient/info?healthcard=${this.angForm.value.healthCard}`, 'json').subscribe(
 							data => {
+								this.patientName = data.firstName + " " + data.lastName;
+
 								items.forEach(surgeon => {
-									if (surgeon.content === data.content) {
+									if (surgeon.content === data.neurosurgeon) {
 										surgeon.selected = true;
-										this.selectedSurgeon = data.content;
+										this.selectedSurgeon = data.neurosurgeon;
 										this.isSurgeonSelected = true;
 									}
 								});
@@ -385,9 +394,6 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 								this.isLoading = false;
 								this.showError = false;
 								this.showInfo = true;
-								setTimeout(() => {
-									this.showInfo = false;
-								}, 5000);
 							},
 							err => {
 								this.isSurgeonsFound = false;

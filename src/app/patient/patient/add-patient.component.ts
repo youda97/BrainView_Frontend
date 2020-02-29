@@ -69,7 +69,36 @@ import {saveAs as importedSaveAs} from "file-saver";
                         placeholder="Number">
                 </ibm-label>
 
-                <ibm-label *ngIf="tokenStorage.getUser().role === 'ROLE_ADMIN'" class="bx--input bx--form-item">
+                <ibm-label
+                    class="bx--input"
+                    [invalid]="invalidFirstName"
+                    invalidText='A first name is required'
+                    style="float: left;
+                    width: 50%;
+                    margin-right: 5px;">
+                    First name
+                    <input
+                        ibmText
+                        theme="light"
+                        name="firstName"
+                        formControlName="firstName"
+                        placeholder="First">
+                </ibm-label>
+
+                <ibm-label
+                    class="bx--input"
+                    [invalid]="invalidLastName"
+                    invalidText='A last name is required'>
+                    Last name
+                    <input
+                        ibmText
+                        theme="light"
+                        name="lastName"
+                        formControlName="lastName"
+                        placeholder="Last">
+                </ibm-label>
+
+                <ibm-label *ngIf="tokenStorage.getUser().role === 'ROLE_ADMIN'" class="bx--input bx--form-item" style="margin-top: 45px;">
                     <label class="bx--label">Surgeon</label>
                     <div class="bx--text-input__field-wrapper">
                         <ibm-combo-box
@@ -162,6 +191,22 @@ export class AddPatientComponent extends BaseModal implements OnInit {
         return false;
     }
 
+    get invalidFirstName() {
+        if (this.angForm.controls['firstName'].invalid &&
+            (this.angForm.controls['firstName'].dirty || this.angForm.controls['firstName'].touched)) {
+            return true;
+        }
+        return false;
+    }
+
+    get invalidLastName() {
+        if (this.angForm.controls['lastName'].invalid &&
+            (this.angForm.controls['lastName'].dirty || this.angForm.controls['lastName'].touched)) {
+            return true;
+        }
+        return false;
+    }
+
     get invalidSurgeon() {
         return !this.isSurgeonSelected && this.dropdownTouched; 
     }
@@ -207,7 +252,7 @@ export class AddPatientComponent extends BaseModal implements OnInit {
         
         this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
 			data => {
-                this.surgeons = data.surgeons
+                this.surgeons = data.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }))
                 this.showSurgeonError = false;
 			},
 			err => {
@@ -219,7 +264,9 @@ export class AddPatientComponent extends BaseModal implements OnInit {
 
 	createForm() {
 		this.angForm = this.fb.group({
-            healthCard: ['', Validators.required]
+            healthCard: ['', Validators.required],
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required]
         });
     }
       

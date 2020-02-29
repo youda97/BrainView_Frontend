@@ -51,7 +51,9 @@
 		[showSelectionColumn]="false">
 	</ibm-table>
 	<form *ngIf="title === 'New Surgeon'" class="bx--form" [formGroup]="angForm" novalidate>
-		<ibm-label class="bx--input" [invalid]="invalidName" invalidText='A valid value is required'>Name<input name="name" formControlName="name" ibmText placeholder="Name"></ibm-label>
+		<ibm-label class="bx--input" style="float: left; width: 50%; margin-right: 5px;" [invalid]="invalidFirstName" invalidText='A first name is required'>First Name<input name="firstName" formControlName="firstName" ibmText placeholder="First"></ibm-label>
+		<ibm-label class="bx--input" [invalid]="invalidLastName" invalidText='A last name value is required'>Last Name<input name="lastName" formControlName="lastName" ibmText placeholder="Last"></ibm-label>
+
 		<ibm-label class="bx--input" [invalid]="invalidEmail" invalidText='A valid value is required'>Email<input ibmText name="email" formControlName="email" placeholder="Email"></ibm-label>
 		<ibm-label class="bx--input" [invalid]="invalidPassword" invalidText='Must have at least 6 character'>Password<input ibmText name="password" type="password" formControlName="password" placeholder="Password"></ibm-label>
 		<ibm-label class="bx--input" [invalid]="invalidConfirmPasswordAdd" invalidText='Password does no match'>Confirm Password<input ibmText name="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Password"></ibm-label>

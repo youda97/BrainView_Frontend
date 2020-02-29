@@ -42,6 +42,8 @@ export class DataService {
                 } else {
                     formData.append('surgeon', this.tokenStorage.getUser().email);
                 }
+                formData.append('firstName', angForm.value.firstName);
+                formData.append('lastName', angForm.value.lastName);
             }
         
             xhr.onreadystatechange = () => {

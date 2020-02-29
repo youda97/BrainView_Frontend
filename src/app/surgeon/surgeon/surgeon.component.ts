@@ -56,7 +56,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	dropdownTouched = false;
 	angForm: FormGroup;
 
-	nameText = '';
+	firstNameText = '';
+	lastNameText = '';
 	emailText = '';
 	passwordText = '';
 
@@ -90,9 +91,17 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		this.createForm();
 	}
 
-	get invalidName() {
-		if (this.angForm.controls['name'].invalid &&
-			(this.angForm.controls['name'].dirty || this.angForm.controls['name'].touched)) {
+	get invalidFirstName() {
+		if (this.angForm.controls['firstName'].invalid &&
+			(this.angForm.controls['firstName'].dirty || this.angForm.controls['firstName'].touched)) {
+			return true;
+		}
+		return false;
+	}
+
+	get invalidLastName() {
+		if (this.angForm.controls['lastName'].invalid &&
+			(this.angForm.controls['lastName'].dirty || this.angForm.controls['lastName'].touched)) {
 			return true;
 		}
 		return false;
@@ -145,9 +154,12 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		];
 
 		this.model.header = [
-			// new TableHeaderItem({
-			// 	data: 'Name'
-			// }),
+			new TableHeaderItem({
+				data: 'First Name'
+			}),
+			new TableHeaderItem({
+				data: 'Last Name'
+			}),
 			new TableHeaderItem({
 				data: 'Email'
 			}),
@@ -183,7 +195,9 @@ export class SurgeonComponent implements OnInit, OnChanges {
 				console.log('model ', resp);
 				resp.surgeons.forEach(surgeon => {
 					this.data.push({
-						email: surgeon.content
+						email: surgeon.username,
+						firstName: surgeon.firstName,
+						lastName: surgeon.lastName
 					})
 				});
 
@@ -200,7 +214,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 
 	createForm() {
 		this.angForm = this.fb.group({
-			name: ['', Validators.required ],
+			firstName: ['', Validators.required ],
+			lastName: ['', Validators.required ],
 			email: ['', [Validators.required, Validators.email]],
 			password: ['', [Validators.required, Validators.minLength(6)]],
 			confirmPassword: ['', Validators.required]
@@ -230,6 +245,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 				// 	expandedData: { name: datum.name, email: datum.email, password: datum.password },
 				// 	expandedTemplate: this.expandedTemplate
 				// }),
+				new TableItem({ data: datum.firstName }),
+				new TableItem({ data: datum.lastName }),
 				new TableItem({ data: datum.email }),
 				// new TableItem({data: datum, template: this.dropdownTemplate}),
 				new TableItem({template: this.deleteTemplate})
@@ -253,9 +270,10 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	save(data, event) {
 		this.data.forEach(element => {
 			if (element.email === data.email) {
-				element.name = event.target.closest('form').children[0].querySelector('input').value;
-				element.email = event.target.closest('form').children[1].querySelector('input').value;
-				element.password = event.target.closest('form').children[2].querySelector('input').value;
+				element.firstName = event.target.closest('form').children[0].querySelector('input').value;
+				element.lastName = event.target.closest('form').children[1].querySelector('input').value;
+				element.email = event.target.closest('form').children[2].querySelector('input').value;
+				element.password = event.target.closest('form').children[3].querySelector('input').value;
 
 				const index = this.data.findIndex(x => x.email === element.email);
 				const page = Math.floor(index / this.model.pageLength) + 1;
@@ -269,7 +287,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 
 	openModal(event) {
 		// const name = event.target.closest('tr').children[1].innerText;
-		this.selectedEmail = event.target.closest('tr').children[0].innerText;
+		this.selectedEmail = event.target.closest('tr').children[2].innerText;
 		this.modalService.show({
 			modalType: this.modalType,
 			title: 'Deleting ' + this.selectedEmail,
@@ -295,11 +313,15 @@ export class SurgeonComponent implements OnInit, OnChanges {
 
 	add() {
 		const item = {
-			// name: this.elementRef.nativeElement.querySelector('[name=\'name\']').value,
+			firstName: this.elementRef.nativeElement.querySelector('[name=\'firstName\']').value,
+			lastName: this.elementRef.nativeElement.querySelector('[name=\'lastName\']').value,
 			email: this.elementRef.nativeElement.querySelector('[name=\'email\']').value,
 		};
 
-		var creds = 'username=' + this.angForm.value.email + '&password=' + this.angForm.value.password;
+		var creds = 'firstName=' + this.angForm.value.firstName +
+			'&lastName=' + this.angForm.value.lastName +
+			'&username=' + this.angForm.value.email +
+			'&password=' + this.angForm.value.password;
        	this.http.post('http://localhost:8080/api/admin/neurosurgeon', creds, {
         headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
         observe: 'response',
@@ -342,14 +364,17 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		if (!value) {
 			this.assignCopy();
 		}
-		// const nameFilter = Object.assign([], this.data).filter(
-		// 	item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-		// );
+		const firstNameFilter = Object.assign([], this.data).filter(
+			item => item.firstName.toLowerCase().indexOf(value.toLowerCase()) > -1
+		);
+		const lastNameFilter = Object.assign([], this.data).filter(
+			item => item.lastName.toLowerCase().indexOf(value.toLowerCase()) > -1
+		);
 		const emailFilter = Object.assign([], this.data).filter(
 			item => item.email.toLowerCase().indexOf(value.toLowerCase()) > -1
 		);
-		// this.filteredItems = nameFilter.concat(emailFilter.filter(x => nameFilter.every(y => y !== x)));
-		this.filteredItems = emailFilter;
+		const temp = firstNameFilter.concat(lastNameFilter.filter(x => firstNameFilter.every(y => y !== x)));
+		this.filteredItems = temp.concat(emailFilter.filter(x => temp.every(y => y !== x)));
 		this.model.totalDataLength = this.filteredItems.length;
 		this.customSort(this.filteredItems);
 		this.selectPage(1);
@@ -415,7 +440,8 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	// }
 
 	assignDefaults(data) {
-		this.nameText = data.name;
+		this.firstNameText = data.firstName;
+		this.lastNameText = data.lastName;
 		this.emailText = data.email;
 		this.passwordText = data.password;
 	}
@@ -459,8 +485,11 @@ export class SurgeonComponent implements OnInit, OnChanges {
 				this.isEditing = true;
 
 				this.angForm.reset();
-				this.angForm.controls['name'].setValue(this.nameText);
-				this.angForm.controls['name'].updateValueAndValidity();
+				this.angForm.controls['firstName'].setValue(this.firstNameText);
+				this.angForm.controls['firstName'].updateValueAndValidity();
+
+				this.angForm.controls['lastName'].setValue(this.lastNameText);
+				this.angForm.controls['lastName'].updateValueAndValidity();
 
 				this.angForm.controls['email'].setValue(this.emailText);
 				this.angForm.controls['email'].updateValueAndValidity();
