@@ -17,7 +17,7 @@ import { FileItem } from 'carbon-components-angular/file-uploader/file-item.inte
 @Component({
 	selector: 'app-sample-modal',
 	template: `
-	  <ibm-modal (overlaySelected)="closeModal()">
+	  <ibm-modal>
 		<ibm-modal-header (closeSelect)="closeModal()">
 			<p class="bx--modal-header__heading bx--type-beta">Search Patient</p>
 		</ibm-modal-header>

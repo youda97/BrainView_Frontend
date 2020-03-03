@@ -1,4 +1,9 @@
-import { Component, AfterContentInit, HostListener, ElementRef } from '@angular/core';
+import {
+	Component,
+	AfterContentInit,
+	HostListener,
+	ElementRef
+} from '@angular/core';
 import { TokenStorageService } from './_services/token-storage.service';
 
 @Component({

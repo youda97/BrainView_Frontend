@@ -1,5 +1,4 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-
 import { ModalService } from 'carbon-components-angular';
 import { SearchPatientComponent } from './search-patient.component'
 import { AddPatientComponent } from './add-patient.component'

@@ -15,8 +15,7 @@ const AUTH_API = 'http://localhost:8080/login';
 export class AuthService {
     constructor(private http: HttpClient) { }
 
-    login(credentials): Observable<any> {
-      var creds = 'username=' + credentials.email + '&password=' + credentials.password;
+    login(creds): Observable<any> {
       return this.http.post(AUTH_API, creds, {
         headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
         observe: 'response',

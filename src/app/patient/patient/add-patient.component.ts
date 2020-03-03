@@ -1,16 +1,22 @@
-import { Component, OnInit, ElementRef, ViewEncapsulation, HostListener } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    ViewEncapsulation,
+    HostListener
+} from '@angular/core';
 import { BaseModal, ModalService } from 'carbon-components-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../_services/user.service';
 import { NotificationService } from 'carbon-components-angular';
 import { TokenStorageService } from '../../_services/token-storage.service';
 import { DataService } from '../../_services/data.service';
-import {saveAs as importedSaveAs} from "file-saver";
+import { saveAs as importedSaveAs } from "file-saver";
 
 @Component({
 	selector: 'app-sample-modal',
 	template: `
-	  <ibm-modal (overlaySelected)="closeModal()">
+	  <ibm-modal>
 		<ibm-modal-header (closeSelect)="closeModal()">
 			<p class="bx--modal-header__heading bx--type-beta">Add Patient</p>
 		</ibm-modal-header>

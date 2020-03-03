@@ -15,7 +15,8 @@ import {
 	PlaceholderModule,
 	ButtonModule,
 	InputModule,
-	ModalModule
+	ModalModule,
+	NotificationModule
 } from 'carbon-components-angular';
 import { Notification20Module } from '@carbon/icons-angular/lib/notification/20';
 import { UserAvatar20Module } from '@carbon/icons-angular/lib/user--avatar/20';
@@ -55,6 +56,7 @@ import { CookieService } from 'ngx-cookie-service';
 		ButtonModule,
 		InputModule,
 		ModalModule,
+		NotificationModule,
 		UserAvatar20Module,
 		AppSwitcher20Module,
 		Cognitive20Module,

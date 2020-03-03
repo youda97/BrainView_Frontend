@@ -74,8 +74,9 @@ export class LoginComponent implements AfterContentInit {
 
 	onSubmit() {
 		this.showError = false;
+		let creds = 'username=' + this.angForm.value.email + '&password=' + this.angForm.value.password;
 
-		this.authService.login(this.angForm.value).subscribe(
+		this.authService.login(creds).subscribe(
 			() => {
 				const user = {
 					role: this.cookieService.get('ROLE'),

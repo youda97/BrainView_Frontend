@@ -20,8 +20,26 @@ export class DataService {
         })
     }
 
+    updatePassword(angForm, role) {
+        if (role === 'ROLE_ADMIN') {
+            var creds = 'password=' + angForm.value.confirmPassword + '&username=admin';
+            return this.http.put(API_URL + 'admin/pass', creds, {
+                headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                observe: 'response',
+                withCredentials: true
+            })
+        } else {
+            var creds = 'password=' + angForm.value.confirmPassword;
+            return this.http.put(API_URL + 'neuro/pass', creds, {
+                headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+                observe: 'response',
+                withCredentials: true
+            })
+        }
+    }
+
     updateSurgeon(angForm, selectedSurgeon) {
-        var creds = 'healthcard=' + angForm.value.healthCard + '&surgeon=' + selectedSurgeon;
+        var creds = 'password=' + angForm.value.healthCard + '&surgeon=' + selectedSurgeon;
         return this.http.put(API_URL + 'admin/patient', creds, {
             headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
             observe: 'response',
