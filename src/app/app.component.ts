@@ -21,7 +21,7 @@ export class AppComponent implements AfterContentInit {
 	ngAfterContentInit() {
 		if (this.tokenStorage.getToken()) {
 			this.role = this.tokenStorage.getUser().role;
-			this.isLoggedIn = true
+			this.isLoggedIn = true;
 			this.pushContent(window);
 		}
 	}
@@ -31,7 +31,7 @@ export class AppComponent implements AfterContentInit {
 			return;
 		}
 
-		this.isLarge = event.innerWidth < 1056 ? false : true
+		this.isLarge = event.innerWidth < 1056 ? false : true;
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -44,7 +44,7 @@ export class AppComponent implements AfterContentInit {
 		const closeButton = this.elementRef.nativeElement.querySelector('.bx--inline-notification__close-button');
 
 		if (closeButton && closeButton.contains(event.target)) {
-			this.elementRef.nativeElement.querySelector('.bx--inline-notification').style.display = "none";
+			this.elementRef.nativeElement.querySelector('.bx--inline-notification').style.display = 'none';
 		}
 	}
 }

@@ -6,13 +6,13 @@ import { SurgeonRoutingModule } from './surgeon-routing.module';
 import { SurgeonComponent } from './surgeon/surgeon.component';
 
 import {
-    TableModule,
+	TableModule,
 	PaginationModule,
 	SearchModule,
 	ButtonModule,
 	InputModule,
 	ModalModule,
-    ComboBoxModule
+	ComboBoxModule
 } from 'carbon-components-angular';
 
 import { Add20Module } from '@carbon/icons-angular/lib/add/20';
@@ -23,21 +23,21 @@ import { ArrowLeft20Module } from '@carbon/icons-angular/lib/arrow--left/20';
 @NgModule({
 	declarations: [SurgeonComponent],
 	imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
+		CommonModule,
+		ReactiveFormsModule,
+		FormsModule,
 		SurgeonRoutingModule,
-        TableModule,
-        PaginationModule,
-        SearchModule,
-        ButtonModule,
-        InputModule,
-        ModalModule,
-        ComboBoxModule,
-        Add20Module,
-        Delete20Module,
-        Save20Module,
-        ArrowLeft20Module
+		TableModule,
+		PaginationModule,
+		SearchModule,
+		ButtonModule,
+		InputModule,
+		ModalModule,
+		ComboBoxModule,
+		Add20Module,
+		Delete20Module,
+		Save20Module,
+		ArrowLeft20Module
 	]
 })
 export class SurgeonModule { }

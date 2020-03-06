@@ -19,7 +19,7 @@ export class AppRoutingModule {
 		const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
 
 		if (this.tokenStorage.getToken()) {
-			let username = this.tokenStorage.getUser().email
+			let username = this.tokenStorage.getUser().email;
 			if (re.test(username)) {
 				username = username.substring(0, username.indexOf('@'));
 			}

@@ -177,7 +177,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 						email: surgeon.username,
 						firstName: surgeon.firstName,
 						lastName: surgeon.lastName
-					})
+					});
 				});
 
 				this.model.pageLength = 10;
@@ -290,7 +290,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 			email: this.elementRef.nativeElement.querySelector('[name=\'email\']').value,
 		};
 
-       	this.dataService.addSurgeon(this.angForm.value).subscribe(
+		this.dataService.addSurgeon(this.angForm.value).subscribe(
 			() => {
 				this.data.push(item);
 				this.model.totalDataLength = this.data.length;
