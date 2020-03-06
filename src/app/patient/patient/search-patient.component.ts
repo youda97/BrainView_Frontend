@@ -225,7 +225,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	showDeleteSuccess = false;
 	showInfo = false;
 	showError = false;
-	patientName = 'Pateint';
+	patientName = 'Patient';
 
 	buttons = [{
 			text: 'Cancel',
