@@ -22,7 +22,7 @@ import { FormGroup, FormBuilder,  Validators } from '@angular/forms';
 // import custom validator to validate that password and confirm password fields match
 import { MustMatch } from '../../_helpers/must-match.validator';
 import { UserService } from '../../_services/user.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DataService } from '../../_services/data.service';
 
 function sort(model, index: number) {
 	if (model.header[index].sorted) {
@@ -87,7 +87,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		protected modalService: ModalService,
 		protected fb: FormBuilder,
 		protected userService: UserService,
-		protected http: HttpClient) {
+		protected dataService: DataService) {
 		this.createForm();
 	}
 
@@ -163,32 +163,11 @@ export class SurgeonComponent implements OnInit, OnChanges {
 			new TableHeaderItem({
 				data: 'Email'
 			}),
-			// new TableHeaderItem({
-			// 	data: 'Patients',
-			// 	sortable: false
-			// }),
 			new TableHeaderItem({
 				data: 'Actions',
 				sortable: false
 			})
 		];
-
-		// for (let i = 0; i < 10; i++) {
-		// 	this.patients.push({
-		// 		content: 'patient name' + i,
-		// 		selected: false
-		// 	});
-		// }
-
-		// for (let i = 0; i < 50; i++) {
-		// 	const newPatients = this.patients.map(a => Object.assign({}, a));
-		// 	this.data.push({
-		// 		name: 'name ' + i,
-		// 		email: 'email' + i + '@uwo.ca',
-		// 		password: 'passpass',
-		// 		patients: newPatients
-		// 	});
-		// }
 
 		this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
 			resp => {
@@ -240,15 +219,9 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		const newData = [];
 		for (const datum of data) {
 			newData.push([
-				// new TableItem({
-				// 	data: datum.name,
-				// 	expandedData: { name: datum.name, email: datum.email, password: datum.password },
-				// 	expandedTemplate: this.expandedTemplate
-				// }),
 				new TableItem({ data: datum.firstName }),
 				new TableItem({ data: datum.lastName }),
 				new TableItem({ data: datum.email }),
-				// new TableItem({data: datum, template: this.dropdownTemplate}),
 				new TableItem({template: this.deleteTemplate})
 			]);
 		}
@@ -286,7 +259,6 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	}
 
 	openModal(event) {
-		// const name = event.target.closest('tr').children[1].innerText;
 		this.selectedEmail = event.target.closest('tr').children[2].innerText;
 		this.modalService.show({
 			modalType: this.modalType,
@@ -297,7 +269,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 	}
 
 	delete() {
-		this.http.delete('http://localhost:8080/api/admin/neurosurgeon/' + this.selectedEmail, { responseType: 'text' }).subscribe(
+		this.dataService.deleteSurgeon(this.selectedEmail).subscribe(
 			() => {
 				const index = this.data.findIndex(x => x.email === this.selectedEmail);
 				this.data.splice(index, 1);
@@ -318,15 +290,7 @@ export class SurgeonComponent implements OnInit, OnChanges {
 			email: this.elementRef.nativeElement.querySelector('[name=\'email\']').value,
 		};
 
-		var creds = 'firstName=' + this.angForm.value.firstName +
-			'&lastName=' + this.angForm.value.lastName +
-			'&username=' + this.angForm.value.email +
-			'&password=' + this.angForm.value.password;
-       	this.http.post('http://localhost:8080/api/admin/neurosurgeon', creds, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
-        observe: 'response',
-        withCredentials: true
-      	}).subscribe(
+       	this.dataService.addSurgeon(this.angForm.value).subscribe(
 			() => {
 				this.data.push(item);
 				this.model.totalDataLength = this.data.length;
@@ -402,8 +366,6 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		return result;
 	}
 
-	// TODO: Remove selected patients from other dropdowns
-	// and add them back when they unselected
 	onSelected(event, data) {
 		event.forEach(patientElem => {
 			this.selectedList.push(patientElem);
@@ -430,30 +392,12 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		this.onSelected(event, data.patients);
 	}
 
-	// newSurgeonSelected(event) {
-	// 	this.newPatients = this.patients.map(a => Object.assign({}, a));
-	// 	this.onSelected(event, this.newPatients);
-
-	// 	setTimeout(() => {
-	// 		this.disabledAdd = !(this.newPatients.some(patient => patient.selected) && !(this.angForm.pristine || this.angForm.invalid));
-	// 	});
-	// }
-
 	assignDefaults(data) {
 		this.firstNameText = data.firstName;
 		this.lastNameText = data.lastName;
 		this.emailText = data.email;
 		this.passwordText = data.password;
 	}
-
-	// @HostListener('focusout',  ['$event'])
-	// onFocousout(event) {
-	// 	const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
-
-	// 	if (this.title === 'New Surgeon' && dropdown.contains(event.target)) {
-	// 		this.dropdownTouched = true;
-	// 	}
-	// }
 
 	@HostListener('keyup',  ['$event'])
 	onKeyup(event) {
@@ -462,7 +406,6 @@ export class SurgeonComponent implements OnInit, OnChanges {
 		if (textFields.some(field => field.contains(event.target))) {
 			this.disabledAdd =
 				!(textFields.every(field => field.querySelector('input').value !== '') &&
-				// this.newPatients.some(patient => patient.selected) &&
 				!(this.angForm.pristine || this.angForm.invalid));
 		}
 	}

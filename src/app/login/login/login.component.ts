@@ -77,12 +77,12 @@ export class LoginComponent implements AfterContentInit {
 		let creds = 'username=' + this.angForm.value.email + '&password=' + this.angForm.value.password;
 
 		this.authService.login(creds).subscribe(
-			() => {
+			resp => {
 				const user = {
-					role: this.cookieService.get('ROLE'),
+					role: resp.body.role,
 					email: this.angForm.value.email
 				};
-				this.tokenStorage.saveToken(this.cookieService.get('JSESSIONID'));
+				this.tokenStorage.saveToken(resp.body.session);
 				this.tokenStorage.saveUser(user);
 
 				this.tokenStorage.setLoggoutStatus('false');

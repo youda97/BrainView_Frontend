@@ -336,7 +336,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 		this.userService.getUserBoard(`patient?healthcard=${this.angForm.value.healthCard}`, 'blob').subscribe(
 			response => {
 				this.blob = new Blob([response], { type: 'application/octet-stream' });
-				const file = new File([response], "myModel.obj");
+				const file = new File([response], this.patientName + "'s Model.obj");
 				const fileItem = this.createFileItem(file);
 				this.files.clear();
 				this.files.add(fileItem);

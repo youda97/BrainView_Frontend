@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { TokenStorageService } from './token-storage.service'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-const API_URL = 'http://localhost:8080/api/';
+const API_URL = 'http://35.168.133.178:8080/api/';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +18,23 @@ export class DataService {
             observe: 'response',
             withCredentials: true
         })
+    }
+
+    deleteSurgeon(selectedEmail) {
+        return this.http.delete(API_URL + 'admin/neurosurgeon/' + selectedEmail, { responseType: 'text' })
+    }
+
+    addSurgeon(value) {
+        var creds = 'firstName=' + value.firstName +
+        '&lastName=' + value.lastName +
+        '&username=' + value.email +
+        '&password=' + value.password;
+
+        return this.http.post(API_URL + 'admin/neurosurgeon', creds, {
+            headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+            observe: 'response',
+            withCredentials: true
+      	})
     }
 
     updatePassword(angForm, role) {
