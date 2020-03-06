@@ -43,7 +43,10 @@
 
 	.bx--footer {
 		text-align: center;
-		padding-top: 70px;
+		position: absolute;
+		bottom: 0;
+		left: 32%;
+		padding-bottom: 20px;
 
 		.bx--text1,
 		.bx--text2 {
@@ -62,7 +65,7 @@
 }
 
 .notifications {
-	position: fixed;
+	position: absolute;
 	margin-left: -40px;
 	top: 0;
 
