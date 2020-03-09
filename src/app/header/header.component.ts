@@ -23,8 +23,8 @@ export class HeaderComponent implements AfterContentInit {
 	@HostBinding('class.bx--header') headerClass = true;
 
 	isLarge = false;
-	username = "";
-	role = "";
+	username = '';
+	role = '';
 	buttons = [
 		{
 			text: 'No',
@@ -49,7 +49,7 @@ export class HeaderComponent implements AfterContentInit {
 		if (this.tokenStorage.getToken()) {
 			this.role = this.tokenStorage.getUser().role === 'ROLE_ADMIN' ? 'Admin' : 'Surgeon';
 			const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
-			this.username = this.tokenStorage.getUser().email
+			this.username = this.tokenStorage.getUser().email;
 			if (re.test(this.username)) {
 				this.username = this.username.substring(0, this.username.indexOf('@'));
 			}
@@ -91,7 +91,6 @@ export class HeaderComponent implements AfterContentInit {
 				this.elementRef.nativeElement.querySelector('ibm-sidenav').classList.add('bx--side-nav--rail');
 			}
 		});
-		
 	}
 
 	@HostListener('window:resize', ['$event'])

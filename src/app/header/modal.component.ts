@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { BaseModal, ModalService } from 'carbon-components-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MustMatch } from '../_helpers/must-match.validator';
@@ -53,7 +53,7 @@ import { DataService } from '../_services/data.service';
 		</ibm-modal-footer>
 	  </ibm-modal>
 	`,
-    styles: [`
+	styles: [`
         .notifications {
             position: fixed;
 			width: 100%;
@@ -65,7 +65,7 @@ import { DataService } from '../_services/data.service';
         .bx--inline-notification--low-contrast {
 			animation: 0.5s ease-out 0s 1 slideInFromLeft;
 		}
-        
+
         @keyframes slideInFromLeft {
 			0% {
 				transform: translateX(-45%);
@@ -75,14 +75,14 @@ import { DataService } from '../_services/data.service';
 			}
 		}
     `],
-    encapsulation: ViewEncapsulation.None
+	encapsulation: ViewEncapsulation.None
 })
-export class ModalComponent extends BaseModal {
+export class ModalComponent extends BaseModal implements OnInit {
 	angForm: FormGroup;
 	disabled = true;
 	showError = false;
 	role = '';
-	
+
 	get invalidCurrentPassword() {
 		if (this.angForm.controls['currentPassword'].invalid &&
 			(this.angForm.controls['currentPassword'].dirty || this.angForm.controls['currentPassword'].touched)) {
@@ -135,13 +135,13 @@ export class ModalComponent extends BaseModal {
 
 	save() {
 		this.showError = false;
-		let creds = 'username=' + this.tokenStorage.getUser().email + '&password=' + this.angForm.value.currentPassword;
+		const creds = 'username=' + this.tokenStorage.getUser().email + '&password=' + this.angForm.value.currentPassword;
 		this.authService.login(creds).subscribe(
 			() => {
 				this.data.updatePassword(this.angForm, this.role).subscribe(
 					() => {
 						this.closeModal();
-						document.body.querySelector('.bx--content').insertAdjacentHTML('afterbegin', 
+						document.body.querySelector('.bx--content').insertAdjacentHTML('afterbegin',
 							`
 							<div class="notifications">
 								<ibm-notification ng-reflect-notification-obj="[object Object]" id="notification" class="bx--inline-notification bx--inline-notification--success bx--inline-notification--low-contrast ng-star-inserted" role="alert" style="">
@@ -170,18 +170,18 @@ export class ModalComponent extends BaseModal {
 					},
 					err => {
 						this.showError = true;
-						console.log("error ", err);
+						console.log('error ', err);
 					},
 					() => {
 						setTimeout(() => {
-							this.closeModal()
-						}, 5000); 
+							this.closeModal();
+						}, 5000);
 					}
 				);
 			},
 			err => {
 				this.showError = true;
-				console.log("error ", err);
+				console.log('error ', err);
 			}
 		);
 	}

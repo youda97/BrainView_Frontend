@@ -1,9 +1,9 @@
 import {
-    Component,
-    OnInit,
-    ElementRef,
-    ViewEncapsulation,
-    HostListener
+	Component,
+	OnInit,
+	ElementRef,
+	ViewEncapsulation,
+	HostListener
 } from '@angular/core';
 import { BaseModal, ModalService } from 'carbon-components-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { UserService } from '../../_services/user.service';
 import { NotificationService } from 'carbon-components-angular';
 import { TokenStorageService } from '../../_services/token-storage.service';
 import { DataService } from '../../_services/data.service';
-import { saveAs as importedSaveAs } from "file-saver";
+import { saveAs as importedSaveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-sample-modal',
@@ -22,8 +22,8 @@ import { saveAs as importedSaveAs } from "file-saver";
 		</ibm-modal-header>
         <section class="bx--modal-content">
             <div class="notifications">
-                <ibm-notification 
-                    *ngIf="showSuccess" 
+                <ibm-notification
+                    *ngIf="showSuccess"
                     (close)="showSuccess = false;"
                     [notificationObj]="{
                         type: 'success',
@@ -118,7 +118,7 @@ import { saveAs as importedSaveAs } from "file-saver";
                         </ibm-combo-box>
                     </div>
                 </ibm-label>
-                
+
                 <ibm-file-uploader
                     title="Model"
                     description="only .obj files. 4mb max file size."
@@ -141,7 +141,7 @@ import { saveAs as importedSaveAs } from "file-saver";
         </ibm-modal-footer>
 	  </ibm-modal>
     `,
-    styles: [`
+	styles: [`
         .bx--list-box input[role='combobox'] {
             background-color: #f4f4f4;
         }
@@ -157,7 +157,7 @@ import { saveAs as importedSaveAs } from "file-saver";
         .bx--inline-notification--low-contrast {
 			animation: 0.5s ease-out 0s 1 slideInFromLeft;
 		}
-        
+
         @keyframes slideInFromLeft {
 			0% {
 				transform: translateX(-45%);
@@ -167,235 +167,235 @@ import { saveAs as importedSaveAs } from "file-saver";
 			}
 		}
     `],
-    encapsulation: ViewEncapsulation.None
+	encapsulation: ViewEncapsulation.None
 })
 export class AddPatientComponent extends BaseModal implements OnInit {
-    role = '';
-    angForm: FormGroup;
+	role = '';
+	angForm: FormGroup;
 
-    invalidLength = true;
+	invalidLength = true;
 
-    surgeons = [];
-    isSurgeonSelected = false;
-    dropdownTouched = false;
+	surgeons = [];
+	isSurgeonSelected = false;
+	dropdownTouched = false;
 
-    blob: Blob;
-    files = new Set<any>();
-    accept = ['.obj'];
+	blob: Blob;
+	files = new Set<any>();
+	accept = ['.obj'];
 
-    showSuccess = false;
-    showError = false;
-    showSurgeonError = false;
+	showSuccess = false;
+	showError = false;
+	showSurgeonError = false;
 
-    protected maxSize = 4000000;
+	protected maxSize = 16000000;
 
-    get invalidHealthCard() {
-        if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
-            (this.angForm.controls['healthCard'].dirty || this.angForm.controls['healthCard'].touched)) {
-            return true;
-        }
-        return false;
-    }
+	get invalidHealthCard() {
+		if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
+			(this.angForm.controls['healthCard'].dirty || this.angForm.controls['healthCard'].touched)) {
+			return true;
+		}
+		return false;
+	}
 
-    get invalidFirstName() {
-        if (this.angForm.controls['firstName'].invalid &&
-            (this.angForm.controls['firstName'].dirty || this.angForm.controls['firstName'].touched)) {
-            return true;
-        }
-        return false;
-    }
+	get invalidFirstName() {
+		if (this.angForm.controls['firstName'].invalid &&
+			(this.angForm.controls['firstName'].dirty || this.angForm.controls['firstName'].touched)) {
+			return true;
+		}
+		return false;
+	}
 
-    get invalidLastName() {
-        if (this.angForm.controls['lastName'].invalid &&
-            (this.angForm.controls['lastName'].dirty || this.angForm.controls['lastName'].touched)) {
-            return true;
-        }
-        return false;
-    }
+	get invalidLastName() {
+		if (this.angForm.controls['lastName'].invalid &&
+			(this.angForm.controls['lastName'].dirty || this.angForm.controls['lastName'].touched)) {
+			return true;
+		}
+		return false;
+	}
 
-    get invalidSurgeon() {
-        return !this.isSurgeonSelected && this.dropdownTouched; 
-    }
+	get invalidSurgeon() {
+		return !this.isSurgeonSelected && this.dropdownTouched;
+	}
 
-    get disabled() {
+	get disabled() {
 		if (this.files.size > 0) {
-            let temp;
-            if (this.role === 'ROLE_ADMIN') {
-                temp = this.isSurgeonSelected &&
-                !(this.angForm.pristine || this.angForm.invalid) &&
-                !this.getFileItem().invalid;
-            } else {
-                temp = !(this.angForm.pristine || this.angForm.invalid) &&
-                !this.getFileItem().invalid;
-            }
+			let temp;
+			if (this.role === 'ROLE_ADMIN') {
+				temp = this.isSurgeonSelected &&
+				!(this.angForm.pristine || this.angForm.invalid) &&
+				!this.getFileItem().invalid;
+			} else {
+				temp = !(this.angForm.pristine || this.angForm.invalid) &&
+				!this.getFileItem().invalid;
+			}
 
-            return !temp;
-        } else {
-            return true;
-        }
-    }
+			return !temp;
+		} else {
+			return true;
+		}
+	}
 
 	constructor(
 		protected modalService: ModalService,
 		protected fb: FormBuilder,
-        protected userService: UserService,
-        protected notificationService: NotificationService,
-        protected elementRef: ElementRef,
-        protected tokenStorage: TokenStorageService,
-        protected data: DataService) {
-        super();
+		protected userService: UserService,
+		protected notificationService: NotificationService,
+		protected elementRef: ElementRef,
+		protected tokenStorage: TokenStorageService,
+		protected data: DataService) {
+		super();
 		this.createForm();
 	}
 
-    ngOnInit() {
-        if (this.tokenStorage.getToken()) {
+	ngOnInit() {
+		if (this.tokenStorage.getToken()) {
 			this.role = this.tokenStorage.getUser().role;
-        }
+		}
 
-        if (this.role === 'ROLE_USER') {
-            return;
-        }
-        
-        this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
+		if (this.role === 'ROLE_USER') {
+			return;
+		}
+
+		this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
 			data => {
-                this.surgeons = data.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }))
-                this.showSurgeonError = false;
+				this.surgeons = data.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }));
+				this.showSurgeonError = false;
 			},
 			err => {
-                this.showSurgeonError = true;
-			    console.log(err);
+				this.showSurgeonError = true;
+				console.log(err);
 			}
 		);
-    }
+	}
 
 	createForm() {
 		this.angForm = this.fb.group({
-            healthCard: ['', Validators.required],
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required]
-        });
-    }
-      
-    selectSurgeon(event) {
-        this.surgeons.forEach(surgeon => {
+			healthCard: ['', Validators.required],
+			firstName: ['', Validators.required],
+			lastName: ['', Validators.required]
+		});
+	}
+
+	selectSurgeon(event) {
+		this.surgeons.forEach(surgeon => {
 			surgeon.selected = false;
 			if (surgeon.content === event.item.content) {
-                surgeon.selected = true;
-                this.isSurgeonSelected = true;
+				surgeon.selected = true;
+				this.isSurgeonSelected = true;
 			}
-        }); 
-    }
+		});
+	}
 
-    onFileAdd() {
-        const fileItem = this.getFileItem();
-        if (this.files.size > 0) {
-            this.blob = fileItem.file as Blob;
+	onFileAdd() {
+		const fileItem = this.getFileItem();
+		if (this.files.size > 0) {
+			this.blob = fileItem.file as Blob;
 
-            if (!fileItem.uploaded) {
-                if (fileItem.file.size > this.maxSize) {
-                    fileItem.state = 'edit';
-                    fileItem.invalid = true;
-                    fileItem.invalidText = 'File size exceeds limit';
-                }
-                return;
-            }
-        }
-    }
+			if (!fileItem.uploaded) {
+				if (fileItem.file.size > this.maxSize) {
+					fileItem.state = 'edit';
+					fileItem.invalid = true;
+					fileItem.invalidText = 'File size exceeds limit';
+				}
+				return;
+			}
+		}
+	}
 
-    downloadFile() {
+	downloadFile() {
 		importedSaveAs(this.blob, this.getFileItem().file.name);
 	}
 
 	add() {
-        const fileItem = this.getFileItem();
+		const fileItem = this.getFileItem();
 
-        let input = '';
-        if (this.role === 'ROLE_ADMIN') {
-            input =  this.elementRef.nativeElement.querySelector('.bx--combo-box').querySelector('input');
-        }
+		let input = '';
+		if (this.role === 'ROLE_ADMIN') {
+			input =  this.elementRef.nativeElement.querySelector('.bx--combo-box').querySelector('input');
+		}
 
-        this.showError = false;
-        this.data.manageFile(fileItem, this.angForm, "POST", input).subscribe(
-            ()  => {
-                if (fileItem.file.size < this.maxSize) {
-                    fileItem.state = 'complete'
-                    fileItem.uploaded = true;
-                    this.showSuccess = true;
-                    this.showError = false;
-                    setTimeout(() => {
-                        this.showSuccess = false;
-                    }, 5000);
-                }
-            },
-            error => {
-                this.showError = true;
-                console.log("error ", error);
-            }
-        );
-    }
+		this.showError = false;
+		this.data.manageFile(fileItem, this.angForm, 'POST', input).subscribe(
+			()  => {
+				if (fileItem.file.size < this.maxSize) {
+					fileItem.state = 'complete';
+					fileItem.uploaded = true;
+					this.showSuccess = true;
+					this.showError = false;
+					setTimeout(() => {
+						this.showSuccess = false;
+					}, 5000);
+				}
+			},
+			error => {
+				this.showError = true;
+				console.log('error ', error);
+			}
+		);
+	}
 
-    getFileItem() {
-        //get iterator:
-        var it = this.files.values();
-        //get first entry:
-        var first = it.next();
-        //get value out of the iterator entry:
-        return first.value;
-    }
-    
-    limitInput(event) {
-        const input = event.target.value.replace(/-/g, '');
-        const numRegExp = new RegExp(/^[0-9]*$/); 
-        const alphaRegExp = new RegExp(/^[a-zA-Z]+$/); 
+	getFileItem() {
+		// get iterator:
+		const it = this.files.values();
+		// get first entry:
+		const first = it.next();
+		// get value out of the iterator entry:
+		return first.value;
+	}
 
-        if (input.length < 10 && !numRegExp.test(event.key)) {
-            event.preventDefault();  
-        } else if (input.length >= 10 && !alphaRegExp.test(event.key)) {
-            event.preventDefault();
-        }
-    }
+	limitInput(event) {
+		const input = event.target.value.replace(/-/g, '');
+		const numRegExp = new RegExp(/^[0-9]*$/);
+		const alphaRegExp = new RegExp(/^[a-zA-Z]+$/);
 
-    formatHealthcard(event) {
-        let output = '';
-        let idx = 0;
-        const format = [4, 3, 3, 2];
-        const input = event.target.value.replace(/-/g, '');
+		if (input.length < 10 && !numRegExp.test(event.key)) {
+			event.preventDefault();
+		} else if (input.length >= 10 && !alphaRegExp.test(event.key)) {
+			event.preventDefault();
+		}
+	}
 
-        for (var i = 0; i < format.length && idx < input.length; i++) {
-            output += input.substr(idx, format[i]);
-            if (idx + format[i] < input.length) {
-                output += '-';
-            }
-            idx += format[i];
-        }
-        output += input.substr(idx);
-    
-        if (input.length > 0) {
-            event.target.value = output;
-        }
+	formatHealthcard(event) {
+		let output = '';
+		let idx = 0;
+		const format = [4, 3, 3, 2];
+		const input = event.target.value.replace(/-/g, '');
 
-        this.invalidLength = event.target.value.length < 15 ? true : false;
-    }
+		for (let i = 0; i < format.length && idx < input.length; i++) {
+			output += input.substr(idx, format[i]);
+			if (idx + format[i] < input.length) {
+				output += '-';
+			}
+			idx += format[i];
+		}
+		output += input.substr(idx);
 
-    @HostListener('focusout',  ['$event'])
+		if (input.length > 0) {
+			event.target.value = output;
+		}
+
+		this.invalidLength = event.target.value.length < 15 ? true : false;
+	}
+
+	@HostListener('focusout',  ['$event'])
 	onFocousout(event) {
 		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
-        
-        
-        if (dropdown && dropdown.contains(event.target)) {
+
+
+		if (dropdown && dropdown.contains(event.target)) {
 			this.dropdownTouched = true;
 		}
-    }
+	}
 
-    @HostListener('keyup', ['$event'])
+	@HostListener('keyup', ['$event'])
 	onKeyup(event) {
-        const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
-        if (dropdown) {
-            if (!dropdown.contains(event.target)) {
-                return;
-            }
-            const inputtedSurgeon = dropdown.querySelector('input').value; 
-            this.isSurgeonSelected = !this.surgeons.every(surgeon => surgeon.content !== inputtedSurgeon);
-        }
-    }
+		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+		if (dropdown) {
+			if (!dropdown.contains(event.target)) {
+				return;
+			}
+			const inputtedSurgeon = dropdown.querySelector('input').value;
+			this.isSurgeonSelected = !this.surgeons.every(surgeon => surgeon.content !== inputtedSurgeon);
+		}
+	}
 }

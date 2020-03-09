@@ -11,7 +11,7 @@ import { UserService } from '../../_services/user.service';
 import { HttpClient } from '@angular/common/http';
 import { TokenStorageService } from '../../_services/token-storage.service';
 import { DataService } from '../../_services/data.service';
-import { saveAs as importedSaveAs } from "file-saver";
+import { saveAs as importedSaveAs } from 'file-saver';
 import { FileItem } from 'carbon-components-angular/file-uploader/file-item.interface';
 
 @Component({
@@ -115,7 +115,7 @@ import { FileItem } from 'carbon-components-angular/file-uploader/file-item.inte
 					(download)="downloadFile()"
 					(filesChange)="onFileAdd()">
 				</ibm-file-uploader>
-			</form>		
+			</form>
 		</section>
 		<ibm-modal-footer>
 			<button class="bx--btn bx--btn--secondary" [disabled]="!isModelFound" (click)="deletePatient()">
@@ -153,7 +153,7 @@ import { FileItem } from 'carbon-components-angular/file-uploader/file-item.inte
 		.bx--inline-notification--low-contrast {
 			animation: 0.5s ease-out 0s 1 slideInFromLeft;
 		}
-		
+
 		.bx--modal-container {
 			overflow: visible;
 		}
@@ -202,12 +202,12 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	role = '';
 	angForm: FormGroup;
 
-	selectedName = "First";
+	selectedName = 'First';
 	invalidLength = true;
 
 	surgeons = [];
 	selectedSurgeon = '';
-	inputtedSurgeon = ''
+	inputtedSurgeon = '';
 	isSurgeonSelected = false;
 	dropdownTouched = false;
 	dropdownDisabled = true;
@@ -220,12 +220,12 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	isLoading = false;
 	isSurgeonsFound = false;
 	isModelFound = false;
-	
+
 	showSuccess = false;
 	showDeleteSuccess = false;
 	showInfo = false;
 	showError = false;
-	patientName = "Pateint";
+	patientName = 'Patient';
 
 	buttons = [{
 			text: 'Cancel',
@@ -235,39 +235,39 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 			type: 'danger',
 			click: () => this.delete()
 	}] as Array<ModalButton>;
-	
+
 	protected maxSize = 4000000;
 
-    get invalidHealthCard() {
-        if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
-            (this.angForm.controls['healthCard'].dirty || this.angForm.controls['healthCard'].touched)) {
-            return true;
-        }
-        return false;
+	get invalidHealthCard() {
+		if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
+			(this.angForm.controls['healthCard'].dirty || this.angForm.controls['healthCard'].touched)) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	get invalidSurgeon() {
-        return this.dropdownTouched && !this.isSurgeonSelected; 
+		return this.dropdownTouched && !this.isSurgeonSelected;
 	}
-	
+
 	get searchDisabled() {
 		return this.angForm.invalid;
 	}
 
 	get updateDisabled() {
-		if (this.role === "ROLE_ADMIN" && this.selectedName === "First") {
+		if (this.role === 'ROLE_ADMIN' && this.selectedName === 'First') {
 			return !this.isSurgeonSelected;
 		} else {
-			if (this.role === "ROLE_ADMIN" && this.files.size > 0) {
+			if (this.role === 'ROLE_ADMIN' && this.files.size > 0) {
 				return !this.isSurgeonSelected || this.getFileItem().invalid;
-			} else if (this.role === "ROLE_USER" && this.files.size > 0) {
+			} else if (this.role === 'ROLE_USER' && this.files.size > 0) {
 				return this.getFileItem().invalid;
 			} else {
 				return true;
 			}
-        }
+		}
 	}
-	
+
 	constructor(
 		protected modalService: ModalService,
 		protected elementRef: ElementRef,
@@ -289,7 +289,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	createForm() {
 		this.angForm = this.fb.group({
 			healthCard: ['', Validators.required]
-        });
+		});
 	}
 
 	selectSurgeon(event) {
@@ -300,35 +300,35 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 				surgeon.selected = true;
 				this.isSurgeonSelected = true;
 			}
-        });
+		});
 	}
 
 	onFileAdd() {
-        const fileItem = this.getFileItem();
-        if (this.files.size > 0) {
+		const fileItem = this.getFileItem();
+		if (this.files.size > 0) {
 			this.blob = fileItem.file as Blob;
 
-            if (!fileItem.uploaded) {
-                if (fileItem.file.size > this.maxSize) {
-                    fileItem.state = 'edit';
-                    fileItem.invalid = true;
-                    fileItem.invalidText = 'File size exceeds limit';
-                }
-                return;
-            }
-        }
+			if (!fileItem.uploaded) {
+				if (fileItem.file.size > this.maxSize) {
+					fileItem.state = 'edit';
+					fileItem.invalid = true;
+					fileItem.invalidText = 'File size exceeds limit';
+				}
+				return;
+			}
+		}
 	}
 
 	createFileItem(file): FileItem {
 		return {
 			uploaded: false,
-			state: "edit",
+			state: 'edit',
 			invalid: false,
-			invalidText: "",
+			invalidText: '',
 			file: file
 		};
 	}
-	
+
 	search() {
 		this.isLoading = true;
 		this.showError = false;
@@ -336,7 +336,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 		this.userService.getUserBoard(`patient?healthcard=${this.angForm.value.healthCard}`, 'blob').subscribe(
 			response => {
 				this.blob = new Blob([response], { type: 'application/octet-stream' });
-				const file = new File([response], this.patientName + "'s Model.obj");
+				const file = new File([response], this.patientName + '\'s Model.obj');
 				const fileItem = this.createFileItem(file);
 				this.files.clear();
 				this.files.add(fileItem);
@@ -347,7 +347,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 				if (this.role === 'ROLE_USER') {
 					this.userService.getUserBoard(`patient/info?healthcard=${this.angForm.value.healthCard}`, 'json').subscribe(
 						data => {
-							this.patientName = data.firstName + " " + data.lastName;
+							this.patientName = data.firstName + ' ' + data.lastName;
 						},
 						err => {
 							console.log(err);
@@ -372,20 +372,20 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 				}
 
 				this.userService.getAdminBoard('/neurosurgeon', 'json').subscribe(
-					data => {
+					surgeonData => {
 						this.dropdownDisabled = false;
 						this.isSurgeonsFound = true;
-		
-						const items = data.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }))
+
+						const items = surgeonData.surgeons.map(({ username: content, ...rest }) => ({ content, ...rest }));
 
 						this.userService.getUserBoard(`patient/info?healthcard=${this.angForm.value.healthCard}`, 'json').subscribe(
-							data => {
-								this.patientName = data.firstName + " " + data.lastName;
+							infoData => {
+								this.patientName = infoData.firstName + ' ' + infoData.lastName;
 
 								items.forEach(surgeon => {
-									if (surgeon.content === data.neurosurgeon) {
+									if (surgeon.content === infoData.neurosurgeon) {
 										surgeon.selected = true;
-										this.selectedSurgeon = data.neurosurgeon;
+										this.selectedSurgeon = infoData.neurosurgeon;
 										this.isSurgeonSelected = true;
 									}
 								});
@@ -417,7 +417,7 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 		this.showError = false;
 		this.isLoading = true;
 
-		if (this.role === "ROLE_ADMIN" && this.selectedName === "First") {
+		if (this.role === 'ROLE_ADMIN' && this.selectedName === 'First') {
 			this.data.updateSurgeon(this.angForm, this.selectedSurgeon).subscribe(
 				() => {
 					this.isLoading = false;
@@ -433,29 +433,29 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 					console.log(err);
 				}
 			);
-		} else if ((this.role === "ROLE_ADMIN" && this.selectedName === "Second") || this.role === "ROLE_USER") {
+		} else if ((this.role === 'ROLE_ADMIN' && this.selectedName === 'Second') || this.role === 'ROLE_USER') {
 			this.updateModel();
 		}
 	}
 
 	updateModel() {
 		const fileItem = this.getFileItem();
-		this.data.manageFile(fileItem, this.angForm, "PUT").subscribe(
+		this.data.manageFile(fileItem, this.angForm, 'PUT').subscribe(
 			() => {
-                if (fileItem.file.size < this.maxSize) {
-                    fileItem.state = 'complete'
-                    fileItem.uploaded = true;
+				if (fileItem.file.size < this.maxSize) {
+					fileItem.state = 'complete';
+					fileItem.uploaded = true;
 					this.showSuccess = true;
 					this.showError = false;
 					this.isLoading = false;
-                    setTimeout(() => {
-                        this.showSuccess = false;
-                    }, 5000);
+					setTimeout(() => {
+						this.showSuccess = false;
+					}, 5000);
 				}
 			},
 			error => {
 				this.showError = true;
-				console.log("error ", error);
+				console.log('error ', error);
 			}
 		);
 	}
@@ -469,12 +469,12 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 			},
 			error => {
 				this.isLoading = false;
-				console.log("error ", error);
+				console.log('error ', error);
 			},
 			() => {
 				this.isLoading = false;
 				this.closeModal();
-				document.body.querySelector('.bx--content').insertAdjacentHTML('afterbegin', 
+				document.body.querySelector('.bx--content').insertAdjacentHTML('afterbegin',
 					`
 					<div class="notifications">
 						<ibm-notification ng-reflect-notification-obj="[object Object]" id="notification" class="bx--inline-notification bx--inline-notification--success bx--inline-notification--low-contrast ng-star-inserted" role="alert" style="">
@@ -519,55 +519,55 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 	}
 
 	getFileItem() {
-        //get iterator:
-        var it = this.files.values();
-        //get first entry:
-        var first = it.next();
-        //get value out of the iterator entry:
-        return first.value;
+		// get iterator:
+		const it = this.files.values();
+		// get first entry:
+		const first = it.next();
+		// get value out of the iterator entry:
+		return first.value;
 	}
-	
+
 	limitInput(event) {
-        const input = event.target.value.replace(/-/g, '');
-        const numRegExp = new RegExp(/^[0-9]*$/); 
-        const alphaRegExp = new RegExp(/^[a-zA-Z]+$/); 
+		const input = event.target.value.replace(/-/g, '');
+		const numRegExp = new RegExp(/^[0-9]*$/);
+		const alphaRegExp = new RegExp(/^[a-zA-Z]+$/);
 
-        if (input.length < 10 && !numRegExp.test(event.key)) {
-            event.preventDefault();  
-        } else if (input.length >= 10 && !alphaRegExp.test(event.key)) {
-            event.preventDefault();
-        }
-    }
-
-    formatHealthcard(event) {
-        let output = '';
-        let idx = 0;
-        const format = [4, 3, 3, 2];
-        const input = event.target.value.replace(/-/g, '');
-
-        for (var i = 0; i < format.length && idx < input.length; i++) {
-            output += input.substr(idx, format[i]);
-            if (idx + format[i] < input.length) {
-                output += '-';
-            }
-            idx += format[i];
-        }
-        output += input.substr(idx);
-    
-        if (input.length > 0) {
-            event.target.value = output;
+		if (input.length < 10 && !numRegExp.test(event.key)) {
+			event.preventDefault();
+		} else if (input.length >= 10 && !alphaRegExp.test(event.key)) {
+			event.preventDefault();
 		}
-		
+	}
+
+	formatHealthcard(event) {
+		let output = '';
+		let idx = 0;
+		const format = [4, 3, 3, 2];
+		const input = event.target.value.replace(/-/g, '');
+
+		for (let i = 0; i < format.length && idx < input.length; i++) {
+			output += input.substr(idx, format[i]);
+			if (idx + format[i] < input.length) {
+				output += '-';
+			}
+			idx += format[i];
+		}
+		output += input.substr(idx);
+
+		if (input.length > 0) {
+			event.target.value = output;
+		}
+
 		this.invalidLength = event.target.value.length < 15 ? true : false;
 	}
-	
+
 	selectedContent(event) {
 		this.selectedName = event.name;
 	}
 
 	@HostListener('focusout',  ['$event'])
 	onFocousout(event) {
-		if (this.role === "ROLE_ADMIN" && this.selectedName === "First") {
+		if (this.role === 'ROLE_ADMIN' && this.selectedName === 'First') {
 			const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
 			if (dropdown.contains(event.target)) {
 				this.dropdownTouched = true;
@@ -577,14 +577,14 @@ export class SearchPatientComponent extends BaseModal implements OnInit {
 
 	@HostListener('keyup', ['$event'])
 	onKeyup(event) {
-        const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
-        if (dropdown) {
-            if (!dropdown.contains(event.target)) {
-                return;
-            }
+		const dropdown = this.elementRef.nativeElement.querySelector('.bx--combo-box');
+		if (dropdown) {
+			if (!dropdown.contains(event.target)) {
+				return;
+			}
 
-            const inputtedSurgeon = dropdown.querySelector('input').value; 
-            this.isSurgeonSelected = !this.surgeons.every(surgeon => surgeon.content !== inputtedSurgeon);
-        }
-    }
+			const inputtedSurgeon = dropdown.querySelector('input').value;
+			this.isSurgeonSelected = !this.surgeons.every(surgeon => surgeon.content !== inputtedSurgeon);
+		}
+	}
 }

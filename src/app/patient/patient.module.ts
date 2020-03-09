@@ -5,28 +5,28 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { PatientRoutingModule } from './patient-routing.module';
 import { PatientComponent } from './patient/patient.component';
-import { SearchPatientComponent } from './patient/search-patient.component'
-import { AddPatientComponent } from './patient/add-patient.component'
+import { SearchPatientComponent } from './patient/search-patient.component';
+import { AddPatientComponent } from './patient/add-patient.component';
 
-import { FileUploaderModule } from '../file-uploader/file-uploader.module'
+import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import {
-    TableModule,
+	TableModule,
 	PaginationModule,
 	SearchModule,
 	ButtonModule,
 	InputModule,
 	ModalModule,
-    ComboBoxModule,
-    DialogModule,
-    PlaceholderModule,
-    GridModule,
-    TilesModule,
-    NotificationService,
-    NotificationModule,
-    DropdownModule,
-    LoadingModule,
-    LinkModule,
-    ContentSwitcherModule
+	ComboBoxModule,
+	DialogModule,
+	PlaceholderModule,
+	GridModule,
+	TilesModule,
+	NotificationService,
+	NotificationModule,
+	DropdownModule,
+	LoadingModule,
+	LinkModule,
+	ContentSwitcherModule
 } from 'carbon-components-angular';
 
 import { Add20Module } from '@carbon/icons-angular/lib/add/20';
@@ -37,38 +37,38 @@ import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 
 @NgModule({
 	declarations: [
-        PatientComponent,
-        SearchPatientComponent,
-        AddPatientComponent
-    ],
+		PatientComponent,
+		SearchPatientComponent,
+		AddPatientComponent
+	],
 	imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HttpClientModule,
+		CommonModule,
+		ReactiveFormsModule,
+		FormsModule,
+		HttpClientModule,
 		PatientRoutingModule,
-        TableModule,
-        PaginationModule,
-        SearchModule,
-        ButtonModule,
-        InputModule,
-        ModalModule,
-        ComboBoxModule,
-        Add20Module,
-        Delete20Module,
-        Save20Module,
-        DialogModule,
-        PlaceholderModule,
-        GridModule,
-        TilesModule,
-        FileUploaderModule,
-        DropdownModule,
-        NotificationModule,
-        LoadingModule,
-        LinkModule,
-        ContentSwitcherModule
-    ],
-    providers: [authInterceptorProviders, NotificationService],
-    entryComponents: [SearchPatientComponent, AddPatientComponent]
+		TableModule,
+		PaginationModule,
+		SearchModule,
+		ButtonModule,
+		InputModule,
+		ModalModule,
+		ComboBoxModule,
+		Add20Module,
+		Delete20Module,
+		Save20Module,
+		DialogModule,
+		PlaceholderModule,
+		GridModule,
+		TilesModule,
+		FileUploaderModule,
+		DropdownModule,
+		NotificationModule,
+		LoadingModule,
+		LinkModule,
+		ContentSwitcherModule
+	],
+	providers: [authInterceptorProviders, NotificationService],
+	entryComponents: [SearchPatientComponent, AddPatientComponent]
 })
 export class PatientModule { }
