@@ -187,7 +187,7 @@ export class AddPatientComponent extends BaseModal implements OnInit {
 	showError = false;
 	showSurgeonError = false;
 
-	protected maxSize = 4000000;
+	protected maxSize = 16000000;
 
 	get invalidHealthCard() {
 		if ((this.invalidLength || this.angForm.controls['healthCard'].invalid) &&
